@@ -34,6 +34,7 @@ void Camera::move(GLFWwindow* window) {
       rotation = rx * rotation * ry;
     }
   }
+
   // Keyboard part
   if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) {
     position += front * keyboardMoveSpeed;
@@ -60,14 +61,25 @@ void Camera::updateViewMatrix() {
   /* TODO#1-1: Calculate lookAt matrix
    *       1. Rotate original_front and original_up using this->rotation.
    *       2. Calculate right vector by cross product.
-   *       3. Calculate view matrix with posision.
+   *       3. Calculate view matrix with position.
    * Hint:
    *       You can calculate the matrix by hand, or use
    *       glm::lookAt (https://glm.g-truc.net/0.9.9/api/a00247.html#gaa64aa951a0e99136bba9008d2b59c78e)
    * Note: You must not use gluLookAt
    */
+
+  glm::vec3 original_front = glm::vec3(0.0f, 0.0f, 0.0f);
+  glm::vec3 cameraDirection = glm::normalize(position - original_front);
+
+  glm::vec3 original_up = glm::vec3(0.0f, 1.0f, 0.0f);
+  glm::vec3 cameraRight = glm::normalize(glm::cross(up, cameraDirection));
+
   right = glm::vec3(0, 0, 0);
+
+  
+
   viewMatrix = glm::identity<glm::mat4>();
+  viewMatrix = glm::lookAt(position, position+original_front, original_up);
 }
 
 void Camera::updateProjectionMatrix(float aspectRatio) {
@@ -80,4 +92,5 @@ void Camera::updateProjectionMatrix(float aspectRatio) {
    * Note: You must not use gluPerspective
    */
   projectionMatrix = glm::identity<glm::mat4>();
+  projectionMatrix = glm::perspective(FOV, aspectRatio, zNear, zFar);
 }

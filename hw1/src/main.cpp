@@ -38,6 +38,8 @@
 #define BLUE 0.203f, 0.596f, 0.858f
 #define GREEN 0.18f, 0.8f, 0.443f
 
+#define PI 3.1415927
+
 float joint0_degree = 0;
 float joint1_degree = 0;
 float joint2_degree = 0;
@@ -95,7 +97,7 @@ void initOpenGL() {
 #endif
 }
 
-void drawUnitCylinder() {
+void drawUnitCylinder(GLfloat radius, GLfloat height) {
   /* TODO#2-1: Render a unit cylinder
    * Hint:
    *       glBegin/glEnd (https://registry.khronos.org/OpenGL-Refpages/gl2.1/xhtml/glBegin.xml)
@@ -107,6 +109,30 @@ void drawUnitCylinder() {
    *       You can refer to ppt "Draw Cylinder" page and `CIRCLE_SEGMENT`
    *       You should set normal for lighting
    */
+    
+    glBegin(GL_QUAD_STRIP);
+    // glColor3f(RED);
+    glNormal3f(0.0f, 0.0f, 1.0f);
+
+    GLfloat x = 0.0;
+    GLfloat y = 0.0;
+    GLfloat angle = 0.0;
+    GLfloat angle_stepsize = (2 * PI) / 64;
+
+    while (angle < 2 * PI) {
+        x = radius * cos(angle);
+        y = radius * sin(angle);
+
+        glVertex3f(x, y, height);
+        glVertex3f(x, y, 0.0);
+
+        angle = angle + angle_stepsize;
+    }
+
+    glVertex3f(radius, 0.0, height);
+    glVertex3f(radius, 0.0, 0.0);
+
+    glEnd();
 }
 
 void light() {
@@ -209,9 +235,13 @@ int main() {
      *       glScalef (https://registry.khronos.org/OpenGL-Refpages/gl2.1/xhtml/glScale.xml)
      * Note:
      *       The coordinates of the cylinder are `target_pos`
-     *       The cylinder's size can refer to `TARGET_RADIUS`, `TARGET_DIAMETER` and `TARGET_DIAMETER`
+     *       The cylinder's size can refer to `TARGET_RADIUS`, `TARGET_DIAMETER` and `TARGET_HEIGHT`
      *       The cylinder's color can refer to `RED`
      */
+
+    glTranslatef(target_pos.x, target_pos.y, target_pos.z);
+    glColor3f(RED);
+    drawUnitCylinder(TARGET_RADIUS, TARGET_HEIGHT);
 
     /* TODO#3: Render the robotic arm
      *       1. Render the base

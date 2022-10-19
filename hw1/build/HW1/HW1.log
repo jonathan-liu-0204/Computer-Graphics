@@ -1,5 +1,2 @@
-﻿  main.cpp
-C:\Users\jonat\Desktop\Computer-Graphics\hw1\src\main.cpp(113,47): warning C4305: '正在初始化': 從 'double' 轉換為 'GLfloat'，是由較大的類型轉換為較小的類型，可能導致資料遺失
-C:\Users\jonat\Desktop\Computer-Graphics\hw1\src\main.cpp(114,46): warning C4305: '正在初始化': 從 'double' 轉換為 'GLfloat'，是由較大的類型轉換為較小的類型，可能導致資料遺失
-C:\Users\jonat\Desktop\Computer-Graphics\hw1\src\main.cpp(115,46): warning C4305: '正在初始化': 從 'double' 轉換為 'GLfloat'，是由較大的類型轉換為較小的類型，可能導致資料遺失
-  HW1.vcxproj -> C:\Users\jonat\Desktop\Computer-Graphics\hw1\bin\HW1.exe
+﻿  camera.cpp
+  HW1.vcxproj -> C:\Users\Jonathan Liu\Desktop\Computer-Graphics\hw1\bin\HW1.exe
