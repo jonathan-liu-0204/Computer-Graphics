@@ -38,8 +38,6 @@
 #define BLUE 0.203f, 0.596f, 0.858f
 #define GREEN 0.18f, 0.8f, 0.443f
 
-#define PI 3.1415927
-
 float joint0_degree = 0;
 float joint1_degree = 0;
 float joint2_degree = 0;
@@ -97,7 +95,7 @@ void initOpenGL() {
 #endif
 }
 
-void drawUnitCylinder(GLfloat radius, GLfloat height) {
+void drawUnitCylinder() {
   /* TODO#2-1: Render a unit cylinder
    * Hint:
    *       glBegin/glEnd (https://registry.khronos.org/OpenGL-Refpages/gl2.1/xhtml/glBegin.xml)
@@ -111,27 +109,48 @@ void drawUnitCylinder(GLfloat radius, GLfloat height) {
    */
     
     glBegin(GL_QUAD_STRIP);
-    // glColor3f(RED);
-    glNormal3f(0.0f, 0.0f, 1.0f);
 
-    GLfloat x = 0.0;
-    GLfloat y = 0.0;
-    GLfloat angle = 0.0;
-    GLfloat angle_stepsize = (2 * PI) / 64;
+    GLfloat x;
+    GLfloat y;
+    GLfloat angle = 2 * M_PI;
+    GLfloat angle_stepsize = angle / 64;
 
-    while (angle < 2 * PI) {
-        x = radius * cos(angle);
-        y = radius * sin(angle);
-
-        glVertex3f(x, y, height);
-        glVertex3f(x, y, 0.0);
-
-        angle = angle + angle_stepsize;
+    while (angle > 0.0) {
+        x = 1.0 * cos(angle);
+        y = 1.0 * sin(angle);
+        glNormal3f(cos(angle), 0, sin(angle));
+        glVertex3f(x, 1.0, y);
+        glVertex3f(x, 0.0, y);
+        angle = angle - angle_stepsize;
     }
+    glVertex3f(1.0, 1.0, 0.0);
+    glVertex3f(1.0, 0.0, 0.0);
+    glEnd();
 
-    glVertex3f(radius, 0.0, height);
-    glVertex3f(radius, 0.0, 0.0);
 
+    glBegin(GL_POLYGON);
+    angle = 2 * M_PI;
+    while (angle > 0.0) {
+      x = 1.0 * cos(angle);
+      y = 1.0 * sin(angle);
+      glNormal3f(0, 1, 0);
+      glVertex3f(x, 1.0, y);
+      angle = angle - angle_stepsize;
+    }
+    glVertex3f(1.0, 1.0, 0.0);
+    glEnd();
+
+
+    glBegin(GL_POLYGON);
+    angle = 2 * M_PI;
+    while (angle > 0.0) {
+      x = 1.0 * cos(angle);
+      y = 1.0 * sin(angle);
+      glNormal3f(0, -1, 0);
+      glVertex3f(y, 0, x);
+      angle = angle - angle_stepsize;
+    }
+    glVertex3f(1.0, 1.0, 0.0);
     glEnd();
 }
 
@@ -238,10 +257,11 @@ int main() {
      *       The cylinder's size can refer to `TARGET_RADIUS`, `TARGET_DIAMETER` and `TARGET_HEIGHT`
      *       The cylinder's color can refer to `RED`
      */
-
+    glPushMatrix();
     glTranslatef(target_pos.x, target_pos.y, target_pos.z);
     glColor3f(RED);
-    drawUnitCylinder(TARGET_RADIUS, TARGET_HEIGHT);
+    glScalef(TARGET_RADIUS, TARGET_HEIGHT, TARGET_RADIUS);
+    drawUnitCylinder();
 
     /* TODO#3: Render the robotic arm
      *       1. Render the base
@@ -259,6 +279,15 @@ int main() {
      *       Rotate degree for joints are `joint0_degree`, `joint1_degree` and `joint2_degree`
      *       You may implement drawBase, drawArm and drawJoin first
      */
+
+    glPopMatrix();
+
+    //base    
+    glTranslatef(0.0f, 0.0f, 0.0f);
+    glColor3f(GREEN);
+    glScalef(BASE_RADIUS, BASE_HEIGHT, BASE_RADIUS);
+    drawUnitCylinder(); 
+
 
 #ifdef __APPLE__
     // Some platform need explicit glFlush

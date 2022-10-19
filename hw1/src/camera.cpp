@@ -1,4 +1,5 @@
 #include "camera.h"
+#include <iostream>
 
 Camera::Camera(glm::vec3 _position)
     : position(_position),
@@ -15,71 +16,75 @@ void Camera::initialize(float aspectRatio) {
 }
 
 void Camera::move(GLFWwindow* window) {
-  bool ismoved = false;
-  // Mouse part
-  static double lastx = 0, lasty = 0;
-  if (lastx == 0 && lasty == 0) {
-    glfwGetCursorPos(window, &lastx, &lasty);
-  } else {
-    double xpos, ypos;
-    glfwGetCursorPos(window, &xpos, &ypos);
-    float dx = mouseMoveSpeed * static_cast<float>(xpos - lastx);
-    float dy = mouseMoveSpeed * static_cast<float>(lasty - ypos);
-    lastx = xpos;
-    lasty = ypos;
-    if (dx != 0 || dy != 0) {
-      ismoved = true;
-      glm::quat rx(glm::angleAxis(dx, glm::vec3(0, -1, 0)));
-      glm::quat ry(glm::angleAxis(dy, glm::vec3(1, 0, 0)));
-      rotation = rx * rotation * ry;
+    bool ismoved = false;
+    // Mouse part
+    static double lastx = 0, lasty = 0;
+    if (lastx == 0 && lasty == 0) {
+        glfwGetCursorPos(window, &lastx, &lasty);
+    } else {
+        double xpos, ypos;
+        glfwGetCursorPos(window, &xpos, &ypos);
+        float dx = mouseMoveSpeed * static_cast<float>(xpos - lastx);
+        float dy = mouseMoveSpeed * static_cast<float>(lasty - ypos);
+        lastx = xpos;
+        lasty = ypos;
+        if (dx != 0 || dy != 0) {
+            ismoved = true;
+            glm::quat rx(glm::angleAxis(dx, glm::vec3(0, -1, 0)));
+            glm::quat ry(glm::angleAxis(dy, glm::vec3(1, 0, 0)));
+            rotation = rx * rotation * ry;
+        }
     }
-  }
 
-  // Keyboard part
-  if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) {
-    position += front * keyboardMoveSpeed;
-    ismoved = true;
-  } else if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS) {
-    position -= front * keyboardMoveSpeed;
-    ismoved = true;
-  } else if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS) {
-    position -= right * keyboardMoveSpeed;
-    ismoved = true;
-  } else if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS) {
-    position += right * keyboardMoveSpeed;
-    ismoved = true;
-  }
-  // Update view matrix if moved
-  if (ismoved) {
-    updateViewMatrix();
-  }
+    // Keyboard part
+    if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) {
+        position += front * keyboardMoveSpeed;
+        ismoved = true;
+    } else if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS) {
+        position -= front * keyboardMoveSpeed;
+        ismoved = true;
+    } else if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS) {
+        position -= right * keyboardMoveSpeed;
+        ismoved = true;
+    } else if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS) {
+        position += right * keyboardMoveSpeed;
+        ismoved = true;
+    }
+    // Update view matrix if moved
+    if (ismoved) {
+        updateViewMatrix();
+    }
 }
 
 void Camera::updateViewMatrix() {
-  constexpr glm::vec3 original_front(0, 0, -1);
-  constexpr glm::vec3 original_up(0, 1, 0);
-  /* TODO#1-1: Calculate lookAt matrix
-   *       1. Rotate original_front and original_up using this->rotation.
-   *       2. Calculate right vector by cross product.
-   *       3. Calculate view matrix with position.
-   * Hint:
-   *       You can calculate the matrix by hand, or use
-   *       glm::lookAt (https://glm.g-truc.net/0.9.9/api/a00247.html#gaa64aa951a0e99136bba9008d2b59c78e)
-   * Note: You must not use gluLookAt
-   */
+    constexpr glm::vec3 original_front(0, 0, -1);
+    constexpr glm::vec3 original_up(0, 1, 0);
+    /* TODO#1-1: Calculate lookAt matrix
+    *       1. Rotate original_front and original_up using this->rotation.
+    *       2. Calculate right vector by cross product.
+    *       3. Calculate view matrix with position.
+    * Hint:
+    *       You can calculate the matrix by hand, or use
+    *       glm::lookAt (https://glm.g-truc.net/0.9.9/api/a00247.html#gaa64aa951a0e99136bba9008d2b59c78e)
+    * Note: You must not use gluLookAt
+    */
 
-  glm::vec3 original_front = glm::vec3(0.0f, 0.0f, 0.0f);
-  glm::vec3 cameraDirection = glm::normalize(position - original_front);
+    glm::vec3 cameraTarget = glm::vec3(0.0f, 0.0f, 0.0f);
+    glm::vec3 cameraDirection = glm::normalize(position - cameraTarget);
 
-  glm::vec3 original_up = glm::vec3(0.0f, 1.0f, 0.0f);
-  glm::vec3 cameraRight = glm::normalize(glm::cross(up, cameraDirection));
+    right = glm::normalize(glm::cross(up, cameraDirection));
 
-  right = glm::vec3(0, 0, 0);
-
-  
-
-  viewMatrix = glm::identity<glm::mat4>();
-  viewMatrix = glm::lookAt(position, position+original_front, original_up);
+    // glm::vec3 direction;
+    /*direction.x = cos(-rotation.y) * cos(rotation.x);
+    direction.y = sin(rotation.x);
+    direction.z = sin(-rotation.y) * cos(rotation.x);
+    front = glm::normalize(direction);*/
+    
+    viewMatrix = glm::identity<glm::mat4>();
+    viewMatrix = glm::lookAt(position, position + front, up);
+    
+    viewMatrix = glm::rotate(viewMatrix, rotation.y, glm::vec3(0.0f, 1.0f, 0.0f));
+    viewMatrix = glm::rotate(viewMatrix, rotation.x, glm::vec3(1.0f, 0.0f, 0.0f));
 }
 
 void Camera::updateProjectionMatrix(float aspectRatio) {
