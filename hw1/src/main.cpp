@@ -84,7 +84,7 @@ void initOpenGL() {
   /* TODO#0: Change window title to "HW1 - `your student id`"
    *         Ex. HW1 - 311550000 
    */
-  glfwSetWindowTitle(window, "HW1");
+  glfwSetWindowTitle(window, "HW1 - 311605004");
   glfwSetKeyCallback(window, keyCallback);
   glfwSetFramebufferSizeCallback(window, resizeCallback);
   glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
