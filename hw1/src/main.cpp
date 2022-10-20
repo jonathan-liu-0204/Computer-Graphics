@@ -59,6 +59,7 @@ void keyCallback(GLFWwindow* window, int key, int, int action, int) {
     glfwSetWindowShouldClose(window, GLFW_TRUE);
     return;
   }
+
   /* TODO#4-1: Detect key-events, perform rotation or catch target object
    *       1. Use switch/case to find the key you want.
    *       2. Define and modify some global variable to trigger update in rendering loop
@@ -69,6 +70,38 @@ void keyCallback(GLFWwindow* window, int key, int, int action, int) {
    *       You should finish your robotic arm first.
    *       Otherwise you will spend a lot of time debugging this with a black screen.
    */
+
+  switch (key) { 
+    //BASE ROTATE CLOCKWISE
+    case GLFW_KEY_J:
+      joint0_degree += 5 * ROTATE_SPEED;
+      break;
+
+    // BASE ROTATE COUNTERCLOCKWISE
+    case GLFW_KEY_U:
+      joint0_degree -= 5 * ROTATE_SPEED;
+      break;
+
+    // JOINT1 ROTATE CLOCKWISE
+    case GLFW_KEY_K:
+      joint1_degree += 5;
+      break;
+
+    // JOINT1 ROTATE COUNTERCLOCKWISE
+    case GLFW_KEY_I:
+      joint1_degree -= 5;
+      break;
+
+    // JOINT2 ROTATE CLOCKWISE
+    case GLFW_KEY_L:
+      joint2_degree += 5;
+      break;
+
+    // JOINT2 ROTATE COUNTERCLOCKWISE
+    case GLFW_KEY_O:
+      joint2_degree -= 5;
+      break;
+  }
 }
 
 void initOpenGL() {
@@ -258,16 +291,11 @@ int main() {
      *       The cylinder's color can refer to `RED`
      */
     glPushMatrix();
-    glPushMatrix();
-    glPushMatrix();
-    glPushMatrix();
-    glPushMatrix();
-    glPushMatrix();
-
     glTranslatef(target_pos.x, target_pos.y, target_pos.z);
     glColor3f(RED);
     glScalef(TARGET_RADIUS, TARGET_HEIGHT, TARGET_RADIUS);
     drawUnitCylinder();
+    glPopMatrix();
 
     /* TODO#3: Render the robotic arm
      *       1. Render the base
@@ -287,50 +315,54 @@ int main() {
      */
 
     // BASE    
-    glPopMatrix();
-    glTranslatef(0.0f, 0.0f, 0.0f);
+    glPushMatrix();
+    glTranslatef(0.0f, 0.0, 0.0f);
     glColor3f(GREEN);
     glScalef(BASE_RADIUS, BASE_HEIGHT, BASE_RADIUS);
     drawUnitCylinder(); 
+    glPopMatrix();
 
     // FIRST ARM
-    glPopMatrix();
+    glPushMatrix();
     glTranslatef(0.0f, BASE_HEIGHT, 0.0f);
     glColor3f(BLUE);
     glScalef(ARM_RADIUS, ARM_LEN, ARM_RADIUS);
     drawUnitCylinder();
+    glPopMatrix();
 
     // FIRST JOINT
-    glPopMatrix();
-    glTranslatef(ARM_RADIUS, BASE_HEIGHT + ARM_LEN + JOINT_RADIUS, 0.0f);
+    glPushMatrix();
+    glTranslatef(JOINT_RADIUS, BASE_HEIGHT + ARM_LEN + JOINT_RADIUS, 0.0f);
     glColor3f(GREEN);
-    glScalef(JOINT_WIDTH, JOINT_RADIUS, JOINT_RADIUS);
     glRotatef(90.0f, 0.0, 0.0, 1.0);
-    //glTranslatef(0.0f, JOINT_RADIUS, -JOINT_WIDTH);
+    glScalef(JOINT_RADIUS, JOINT_WIDTH, JOINT_RADIUS);
     drawUnitCylinder();
+    glPopMatrix();    
 
     // SECOND ARM
-    glPopMatrix();
-    glTranslatef(0.0f, BASE_HEIGHT + ARM_LEN +JOINT_DIAMETER, 0.0f);
+    glPushMatrix();
+    glTranslatef(0.0f, BASE_HEIGHT + ARM_LEN + JOINT_DIAMETER, 0.0f);
     glColor3f(BLUE);
     glScalef(ARM_RADIUS, ARM_LEN, ARM_RADIUS);
     drawUnitCylinder();
-
-    // SECOND JOINT
     glPopMatrix();
-    glTranslatef(ARM_RADIUS, BASE_HEIGHT + ARM_LEN * 2 + JOINT_DIAMETER + JOINT_RADIUS, 0.0f);
+
+    //// SECOND JOINT
+    glPushMatrix();
+    glTranslatef(JOINT_RADIUS, BASE_HEIGHT + ARM_LEN*2 + JOINT_DIAMETER + JOINT_RADIUS, 0.0f);
     glColor3f(GREEN);
-    glScalef(JOINT_WIDTH, JOINT_RADIUS, JOINT_RADIUS);
     glRotatef(90.0f, 0.0, 0.0, 1.0);
-    // glTranslatef(0.0f, JOINT_RADIUS, -JOINT_WIDTH);
+    glScalef(JOINT_RADIUS, JOINT_WIDTH, JOINT_RADIUS);
     drawUnitCylinder();
+    glPopMatrix();    
 
-    // THIRD ARM
-    glPopMatrix();
+    //// THIRD ARM
+    glPushMatrix();
     glTranslatef(0.0f, BASE_HEIGHT + ARM_LEN*2 + JOINT_DIAMETER*2, 0.0f);
     glColor3f(BLUE);
     glScalef(ARM_RADIUS, ARM_LEN, ARM_RADIUS);
     drawUnitCylinder();
+    glPopMatrix();
 
 #ifdef __APPLE__
     // Some platform need explicit glFlush
