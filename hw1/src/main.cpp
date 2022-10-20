@@ -41,6 +41,14 @@
 float joint0_degree = 0;
 float joint1_degree = 0;
 float joint2_degree = 0;
+
+int space_pressed = 0;
+float distance = 100.0;
+float robot_x = 0;
+float robot_y = 0;
+float robot_z = 0;
+int pick = 0;
+
 glm::vec3 target_pos(1.0f, 0.05f, 1.0f);
 
 void resizeCallback(GLFWwindow* window, int width, int height) {
@@ -70,6 +78,14 @@ void keyCallback(GLFWwindow* window, int key, int, int action, int) {
    *       You should finish your robotic arm first.
    *       Otherwise you will spend a lot of time debugging this with a black screen.
    */
+
+  if (key == GLFW_KEY_SPACE) {
+    if (space_pressed == 0) {
+      space_pressed = 1;
+    } else {
+      space_pressed = 0;
+    }  
+  } 
 
   switch (key) { 
     //BASE ROTATE CLOCKWISE
@@ -276,6 +292,21 @@ int main() {
     glEnd();
     glPopMatrix();
 
+    if (space_pressed == 1) {
+      // Calculate the distance to the target
+      robot_x = cos(glm::radians(joint0_degree)) * (ARM_LEN + JOINT_RADIUS * 2 + (JOINT_RADIUS + ARM_LEN + CATCH_POSITION_OFFSET) * cos(glm::radians( joint2_degree))) * sin(glm::radians(joint1_degree));
+      robot_y = BASE_HEIGHT + ARM_LEN + JOINT_RADIUS - (JOINT_RADIUS * 2 + ARM_LEN) * cos(glm::radians(180 - joint1_degree - joint2_degree));
+      robot_z = sin(glm::radians(joint0_degree)) * (ARM_LEN + JOINT_RADIUS * 2 + (JOINT_RADIUS + ARM_LEN + CATCH_POSITION_OFFSET) * cos(glm::radians(joint2_degree))) * sin(glm::radians(joint1_degree));
+
+      distance = sqrtf(powf(robot_x - target_pos.x, 2) + powf(robot_y - (target_pos.y + TARGET_HEIGHT), 2) + powf(robot_z - target_pos.z, 2));
+
+     if (distance < TOLERANCE) {
+        pick = 1;
+      } else {
+        pick = 0;
+      }
+    }
+
     /* TODO#2: Render a cylinder at target_pos
      *       1. Translate to target_pos
      *       2. Setup vertex color
@@ -290,12 +321,15 @@ int main() {
      *       The cylinder's size can refer to `TARGET_RADIUS`, `TARGET_DIAMETER` and `TARGET_HEIGHT`
      *       The cylinder's color can refer to `RED`
      */
-    glPushMatrix();
-    glTranslatef(target_pos.x, target_pos.y, target_pos.z);
-    glColor3f(RED);
-    glScalef(TARGET_RADIUS, TARGET_HEIGHT, TARGET_RADIUS);
-    drawUnitCylinder();
-    glPopMatrix();
+
+    if (pick == 0) {
+      glPushMatrix();
+      glTranslatef(target_pos.x, target_pos.y, target_pos.z);
+      glColor3f(RED);
+      glScalef(TARGET_RADIUS, TARGET_HEIGHT, TARGET_RADIUS);
+      drawUnitCylinder();
+      glPopMatrix();
+    }
 
     /* TODO#3: Render the robotic arm
      *       1. Render the base
@@ -366,6 +400,15 @@ int main() {
     glScalef(ARM_RADIUS, ARM_LEN, ARM_RADIUS);
     drawUnitCylinder();
     glPopMatrix();
+
+    if (pick == 1) {
+      glPushMatrix();
+      glTranslatef(0.0, ARM_LEN, 0.0);
+      glColor3f(RED);
+      glScalef(TARGET_RADIUS, TARGET_HEIGHT, TARGET_RADIUS);
+      drawUnitCylinder();
+      glPopMatrix();
+    }
 
 #ifdef __APPLE__
     // Some platform need explicit glFlush
