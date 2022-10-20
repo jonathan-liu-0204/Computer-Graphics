@@ -25,7 +25,7 @@
 #define JOINT_DIAMETER (JOINT_RADIUS * 2)
 #define JOINT_WIDTH 0.1f
 #define BASE_RADIUS 0.5f
-#define BASEE_DIAMETER (BASE_RADIUS * 2)
+#define BASE_DIAMETER (BASE_RADIUS * 2)
 #define BASE_HEIGHT 0.1f
 #define TARGET_RADIUS 0.05f
 #define TARGET_DIAMETER (TARGET_RADIUS * 2)
@@ -258,6 +258,12 @@ int main() {
      *       The cylinder's color can refer to `RED`
      */
     glPushMatrix();
+    glPushMatrix();
+    glPushMatrix();
+    glPushMatrix();
+    glPushMatrix();
+    glPushMatrix();
+
     glTranslatef(target_pos.x, target_pos.y, target_pos.z);
     glColor3f(RED);
     glScalef(TARGET_RADIUS, TARGET_HEIGHT, TARGET_RADIUS);
@@ -280,14 +286,51 @@ int main() {
      *       You may implement drawBase, drawArm and drawJoin first
      */
 
+    // BASE    
     glPopMatrix();
-
-    //base    
     glTranslatef(0.0f, 0.0f, 0.0f);
     glColor3f(GREEN);
     glScalef(BASE_RADIUS, BASE_HEIGHT, BASE_RADIUS);
     drawUnitCylinder(); 
 
+    // FIRST ARM
+    glPopMatrix();
+    glTranslatef(0.0f, BASE_HEIGHT, 0.0f);
+    glColor3f(BLUE);
+    glScalef(ARM_RADIUS, ARM_LEN, ARM_RADIUS);
+    drawUnitCylinder();
+
+    // FIRST JOINT
+    glPopMatrix();
+    glTranslatef(ARM_RADIUS, BASE_HEIGHT + ARM_LEN + JOINT_RADIUS, 0.0f);
+    glColor3f(GREEN);
+    glScalef(JOINT_WIDTH, JOINT_RADIUS, JOINT_RADIUS);
+    glRotatef(90.0f, 0.0, 0.0, 1.0);
+    //glTranslatef(0.0f, JOINT_RADIUS, -JOINT_WIDTH);
+    drawUnitCylinder();
+
+    // SECOND ARM
+    glPopMatrix();
+    glTranslatef(0.0f, BASE_HEIGHT + ARM_LEN +JOINT_DIAMETER, 0.0f);
+    glColor3f(BLUE);
+    glScalef(ARM_RADIUS, ARM_LEN, ARM_RADIUS);
+    drawUnitCylinder();
+
+    // SECOND JOINT
+    glPopMatrix();
+    glTranslatef(ARM_RADIUS, BASE_HEIGHT + ARM_LEN * 2 + JOINT_DIAMETER + JOINT_RADIUS, 0.0f);
+    glColor3f(GREEN);
+    glScalef(JOINT_WIDTH, JOINT_RADIUS, JOINT_RADIUS);
+    glRotatef(90.0f, 0.0, 0.0, 1.0);
+    // glTranslatef(0.0f, JOINT_RADIUS, -JOINT_WIDTH);
+    drawUnitCylinder();
+
+    // THIRD ARM
+    glPopMatrix();
+    glTranslatef(0.0f, BASE_HEIGHT + ARM_LEN*2 + JOINT_DIAMETER*2, 0.0f);
+    glColor3f(BLUE);
+    glScalef(ARM_RADIUS, ARM_LEN, ARM_RADIUS);
+    drawUnitCylinder();
 
 #ifdef __APPLE__
     // Some platform need explicit glFlush

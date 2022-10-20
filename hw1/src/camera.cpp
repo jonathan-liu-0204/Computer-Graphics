@@ -74,7 +74,7 @@ void Camera::updateViewMatrix() {
 
     right = glm::normalize(glm::cross(up, cameraDirection));
 
-    // glm::vec3 direction;
+    //glm::vec3 direction;
     /*direction.x = cos(-rotation.y) * cos(rotation.x);
     direction.y = sin(rotation.x);
     direction.z = sin(-rotation.y) * cos(rotation.x);
