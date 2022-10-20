@@ -74,32 +74,32 @@ void keyCallback(GLFWwindow* window, int key, int, int action, int) {
   switch (key) { 
     //BASE ROTATE CLOCKWISE
     case GLFW_KEY_J:
-      joint0_degree += 5 * ROTATE_SPEED;
+      joint0_degree += 3 * ROTATE_SPEED;
       break;
 
     // BASE ROTATE COUNTERCLOCKWISE
     case GLFW_KEY_U:
-      joint0_degree -= 5 * ROTATE_SPEED;
+      joint0_degree -= 3 * ROTATE_SPEED;
       break;
 
     // JOINT1 ROTATE CLOCKWISE
     case GLFW_KEY_K:
-      joint1_degree += 5;
+      joint1_degree += 3 * ROTATE_SPEED;
       break;
 
     // JOINT1 ROTATE COUNTERCLOCKWISE
     case GLFW_KEY_I:
-      joint1_degree -= 5;
+      joint1_degree -= 3 * ROTATE_SPEED;
       break;
 
     // JOINT2 ROTATE CLOCKWISE
     case GLFW_KEY_L:
-      joint2_degree += 5;
+      joint2_degree += 3 * ROTATE_SPEED;
       break;
 
     // JOINT2 ROTATE COUNTERCLOCKWISE
     case GLFW_KEY_O:
-      joint2_degree -= 5;
+      joint2_degree -= 3 * ROTATE_SPEED;
       break;
   }
 }
@@ -315,24 +315,25 @@ int main() {
      */
 
     // BASE    
-    glPushMatrix();
+    glRotatef(joint0_degree, 0.0, 1.0, 0.0);
     glTranslatef(0.0f, 0.0, 0.0f);
+    glPushMatrix();
     glColor3f(GREEN);
     glScalef(BASE_RADIUS, BASE_HEIGHT, BASE_RADIUS);
     drawUnitCylinder(); 
     glPopMatrix();
 
     // FIRST ARM
+    glTranslatef(0.0f, 0.0f, 0.0f);
     glPushMatrix();
-    glTranslatef(0.0f, BASE_HEIGHT, 0.0f);
     glColor3f(BLUE);
     glScalef(ARM_RADIUS, ARM_LEN, ARM_RADIUS);
     drawUnitCylinder();
     glPopMatrix();
 
     // FIRST JOINT
+    glTranslatef(JOINT_RADIUS, ARM_LEN + JOINT_RADIUS, 0.0f);
     glPushMatrix();
-    glTranslatef(JOINT_RADIUS, BASE_HEIGHT + ARM_LEN + JOINT_RADIUS, 0.0f);
     glColor3f(GREEN);
     glRotatef(90.0f, 0.0, 0.0, 1.0);
     glScalef(JOINT_RADIUS, JOINT_WIDTH, JOINT_RADIUS);
@@ -340,16 +341,17 @@ int main() {
     glPopMatrix();    
 
     // SECOND ARM
+    glRotatef(joint1_degree, 1.0, 0.0, 0.0);
+    glTranslatef(-JOINT_RADIUS, JOINT_RADIUS, 0.0f);
     glPushMatrix();
-    glTranslatef(0.0f, BASE_HEIGHT + ARM_LEN + JOINT_DIAMETER, 0.0f);
     glColor3f(BLUE);
     glScalef(ARM_RADIUS, ARM_LEN, ARM_RADIUS);
     drawUnitCylinder();
     glPopMatrix();
 
     //// SECOND JOINT
+    glTranslatef(JOINT_RADIUS, ARM_LEN + JOINT_RADIUS, 0.0f);
     glPushMatrix();
-    glTranslatef(JOINT_RADIUS, BASE_HEIGHT + ARM_LEN*2 + JOINT_DIAMETER + JOINT_RADIUS, 0.0f);
     glColor3f(GREEN);
     glRotatef(90.0f, 0.0, 0.0, 1.0);
     glScalef(JOINT_RADIUS, JOINT_WIDTH, JOINT_RADIUS);
@@ -357,8 +359,9 @@ int main() {
     glPopMatrix();    
 
     //// THIRD ARM
+    glRotatef(joint2_degree, 1.0, 0.0, 0.0);
+    glTranslatef(-JOINT_RADIUS, JOINT_RADIUS, 0.0f);
     glPushMatrix();
-    glTranslatef(0.0f, BASE_HEIGHT + ARM_LEN*2 + JOINT_DIAMETER*2, 0.0f);
     glColor3f(BLUE);
     glScalef(ARM_RADIUS, ARM_LEN, ARM_RADIUS);
     drawUnitCylinder();
