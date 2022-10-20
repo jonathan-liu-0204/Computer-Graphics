@@ -30,7 +30,7 @@
 #define TARGET_RADIUS 0.05f
 #define TARGET_DIAMETER (TARGET_RADIUS * 2)
 #define TARGET_HEIGHT 0.1f
-#define ROTATE_SPEED 1.0f 
+#define ROTATE_SPEED 1.5f 
 #define CATCH_POSITION_OFFSET 0.05f
 #define TOLERANCE 0.1f
 
@@ -74,32 +74,32 @@ void keyCallback(GLFWwindow* window, int key, int, int action, int) {
   switch (key) { 
     //BASE ROTATE CLOCKWISE
     case GLFW_KEY_J:
-      joint0_degree += 3 * ROTATE_SPEED;
+      joint0_degree += ROTATE_SPEED;
       break;
 
     // BASE ROTATE COUNTERCLOCKWISE
     case GLFW_KEY_U:
-      joint0_degree -= 3 * ROTATE_SPEED;
+      joint0_degree -= ROTATE_SPEED;
       break;
 
     // JOINT1 ROTATE CLOCKWISE
     case GLFW_KEY_K:
-      joint1_degree += 3 * ROTATE_SPEED;
+      joint1_degree += ROTATE_SPEED;
       break;
 
     // JOINT1 ROTATE COUNTERCLOCKWISE
     case GLFW_KEY_I:
-      joint1_degree -= 3 * ROTATE_SPEED;
+      joint1_degree -= ROTATE_SPEED;
       break;
 
     // JOINT2 ROTATE CLOCKWISE
     case GLFW_KEY_L:
-      joint2_degree += 3 * ROTATE_SPEED;
+      joint2_degree += ROTATE_SPEED;
       break;
 
     // JOINT2 ROTATE COUNTERCLOCKWISE
     case GLFW_KEY_O:
-      joint2_degree -= 3 * ROTATE_SPEED;
+      joint2_degree -= ROTATE_SPEED;
       break;
   }
 }
