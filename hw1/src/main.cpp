@@ -120,8 +120,6 @@ void keyCallback(GLFWwindow* window, int key, int, int action, int) {
   }
 }
 
-//test
-
 void initOpenGL() {
   // Initialize OpenGL context, details are wrapped in class.
 #ifdef __APPLE__
