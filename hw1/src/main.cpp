@@ -50,6 +50,9 @@ float robot_z = 0;
 int pick = 0;
 
 glm::vec3 target_pos(1.0f, 0.05f, 1.0f);
+float target_x = target_pos.x;
+float target_y = target_pos.y;
+float target_z = target_pos.z;
 
 void resizeCallback(GLFWwindow* window, int width, int height) {
   OpenGLContext::framebufferResizeCallback(window, width, height);
@@ -80,12 +83,11 @@ void keyCallback(GLFWwindow* window, int key, int, int action, int) {
    */
 
   if (key == GLFW_KEY_SPACE) {
-    if (space_pressed == 0) {
-      space_pressed = 1;
-    } else {
+     space_pressed = 1;
+  }
+  else {
       space_pressed = 0;
     }  
-  } 
 
   switch (key) { 
     //BASE ROTATE CLOCKWISE
@@ -298,11 +300,17 @@ int main() {
       robot_y = BASE_HEIGHT + ARM_LEN + JOINT_RADIUS - (JOINT_RADIUS * 2 + ARM_LEN) * cos(glm::radians(180 - joint1_degree - joint2_degree));
       robot_z = sin(glm::radians(joint0_degree)) * (ARM_LEN + JOINT_RADIUS * 2 + (JOINT_RADIUS + ARM_LEN + CATCH_POSITION_OFFSET) * cos(glm::radians(joint2_degree))) * sin(glm::radians(joint1_degree));
 
-      distance = sqrtf(powf(robot_x - target_pos.x, 2) + powf(robot_y - (target_pos.y + TARGET_HEIGHT), 2) + powf(robot_z - target_pos.z, 2));
+      distance = sqrtf(powf(robot_x - target_x, 2) + powf(robot_y - (target_y + TARGET_HEIGHT), 2) + powf(robot_z - target_z, 2));
 
+        
      if (distance < TOLERANCE) {
         pick = 1;
       } else {
+        if (pick == 1) {
+          target_x = robot_x;
+          target_y = robot_y;
+          target_z = robot_z;
+        }
         pick = 0;
       }
     }
@@ -324,7 +332,7 @@ int main() {
 
     if (pick == 0) {
       glPushMatrix();
-      glTranslatef(target_pos.x, target_pos.y, target_pos.z);
+      glTranslatef(target_x, target_y, target_z);
       glColor3f(RED);
       glScalef(TARGET_RADIUS, TARGET_HEIGHT, TARGET_RADIUS);
       drawUnitCylinder();
