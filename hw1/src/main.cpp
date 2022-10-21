@@ -273,15 +273,32 @@ int main() {
       joint0_degree += ROTATE_SPEED;
     } else if (glfwGetKey(window, GLFW_KEY_U) == GLFW_PRESS) {
       joint0_degree -= ROTATE_SPEED;
-    } else if (glfwGetKey(window, GLFW_KEY_K) == GLFW_PRESS) {
+    }
+
+    if (glfwGetKey(window, GLFW_KEY_K) == GLFW_PRESS) {
       joint1_degree += ROTATE_SPEED;
     } else if (glfwGetKey(window, GLFW_KEY_I) == GLFW_PRESS) {
       joint1_degree -= ROTATE_SPEED;
-    } else if (glfwGetKey(window, GLFW_KEY_L) == GLFW_PRESS) {
+    }
+
+    if (glfwGetKey(window, GLFW_KEY_L) == GLFW_PRESS) {
       joint2_degree += ROTATE_SPEED;
     } else if (glfwGetKey(window, GLFW_KEY_O) == GLFW_PRESS) {
       joint2_degree -= ROTATE_SPEED;
     }
+
+    robot_x = cos(glm::radians(joint0_degree)) *
+              (ARM_LEN + JOINT_RADIUS * 2 +
+               (JOINT_RADIUS + ARM_LEN + CATCH_POSITION_OFFSET) * cos(glm::radians(joint2_degree))) *
+              sin(glm::radians(joint1_degree));
+
+    robot_y = BASE_HEIGHT + ARM_LEN + JOINT_RADIUS -
+              (JOINT_RADIUS * 2 + ARM_LEN) * cos(glm::radians(180 - joint1_degree - joint2_degree));
+
+    robot_z = sin(glm::radians(joint0_degree)) *
+              (ARM_LEN + JOINT_RADIUS * 2 +
+               (JOINT_RADIUS + ARM_LEN + CATCH_POSITION_OFFSET) * cos(glm::radians(joint2_degree))) *
+              sin(glm::radians(joint1_degree));
 
     /* TODO#5: Catch the target object with robotic arm
      *       1. Calculate coordinate of the robotic arm endpoint
@@ -295,6 +312,33 @@ int main() {
      *       and refer to `CATCH_POSITION_OFFSET` and `TOLERANCE`
      */
 
+    if (pick == 1) {
+      target_pos.x =
+          sin(glm::radians(joint0_degree)) * ((JOINT_RADIUS * 2 + ARM_LEN) * sin(glm::radians(joint1_degree)) +
+                                              (JOINT_RADIUS + ARM_LEN + CATCH_POSITION_OFFSET + TOLERANCE) *
+                                                  sin(glm::radians(180 - joint1_degree - joint2_degree)));
+
+      target_pos.y = BASE_HEIGHT + ARM_LEN + JOINT_RADIUS +
+                     (JOINT_RADIUS * 2 + ARM_LEN) * cos(glm::radians(joint1_degree)) -
+                     (JOINT_RADIUS + ARM_LEN + CATCH_POSITION_OFFSET + TOLERANCE) *
+                         cos(glm::radians(180 - joint1_degree - joint2_degree));
+
+      target_pos.z =
+          cos(glm::radians(joint0_degree)) * ((JOINT_RADIUS * 2 + ARM_LEN) * sin(glm::radians(joint1_degree)) +
+                                              (JOINT_RADIUS + ARM_LEN + CATCH_POSITION_OFFSET + TOLERANCE) *
+                                                  sin(glm::radians(180 - joint1_degree - joint2_degree)));
+    }
+
+    distance = sqrtf(powf(robot_x - target_pos.x, 2) + powf(robot_y - (target_pos.y + TARGET_HEIGHT / 2), 2) + powf(robot_z - target_pos.z, 2));
+
+    if (space_pressed == 1) {
+      if (distance < TOLERANCE) {
+        pick = 1;
+      } else {
+        pick = 0;
+      }
+    }
+
     // Render a white board
     glPushMatrix();
     glScalef(3, 1, 3);
@@ -307,22 +351,6 @@ int main() {
     glVertex3f(1.0f, 0.0f, 1.0f);
     glEnd();
     glPopMatrix();
-
-    robot_x = cos(glm::radians(joint0_degree)) * (ARM_LEN + JOINT_RADIUS * 2 + (JOINT_RADIUS + ARM_LEN + CATCH_POSITION_OFFSET) * cos(glm::radians( joint2_degree))) * sin(glm::radians(joint1_degree));
-    robot_y = BASE_HEIGHT + ARM_LEN + JOINT_RADIUS - (JOINT_RADIUS * 2 + ARM_LEN) * cos(glm::radians(180 - joint1_degree - joint2_degree));
-    robot_z = sin(glm::radians(joint0_degree)) * (ARM_LEN + JOINT_RADIUS * 2 + (JOINT_RADIUS + ARM_LEN + CATCH_POSITION_OFFSET) * cos(glm::radians(joint2_degree))) * sin(glm::radians(joint1_degree));
-
-    distance = sqrtf(powf(robot_x - target_pos.x, 2) + powf(robot_y - (target_pos.y + TARGET_HEIGHT), 2) + powf(robot_z - target_pos.z, 2));
-
-    if (space_pressed == 1) {
-      // Calculate the distance to the target
-        
-      if (distance < TOLERANCE) {
-        pick = 1;
-      } else {
-        pick = 0;
-      }
-    }
 
     /* TODO#2: Render a cylinder at target_pos
      *       1. Translate to target_pos
@@ -339,14 +367,12 @@ int main() {
      *       The cylinder's color can refer to `RED`
      */
 
-    //if (pick == 0) {
     glPushMatrix();
     glTranslatef(target_pos.x, target_pos.y, target_pos.z);
     glColor3f(RED);
     glScalef(TARGET_RADIUS, TARGET_HEIGHT, TARGET_RADIUS);
     drawUnitCylinder();
     glPopMatrix();
-    //}
 
     /* TODO#3: Render the robotic arm
      *       1. Render the base
@@ -417,19 +443,6 @@ int main() {
     glScalef(ARM_RADIUS, ARM_LEN, ARM_RADIUS);
     drawUnitCylinder();
     glPopMatrix();
-
-    if (pick == 1) {
-      // glPushMatrix();
-      // glTranslatef(0.0, ARM_LEN, 0.0);
-      // glColor3f(RED);
-      // glScalef(TARGET_RADIUS, TARGET_HEIGHT, TARGET_RADIUS);
-      // drawUnitCylinder();
-      // glPopMatrix();
-
-      target_pos.x = robot_x;
-      target_pos.y = robot_y;
-      target_pos.z = robot_z;
-    }
 
 #ifdef __APPLE__
     // Some platform need explicit glFlush
