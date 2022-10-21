@@ -30,7 +30,7 @@
 #define TARGET_RADIUS 0.05f
 #define TARGET_DIAMETER (TARGET_RADIUS * 2)
 #define TARGET_HEIGHT 0.1f
-#define ROTATE_SPEED 1.5f 
+#define ROTATE_SPEED 0.6f 
 #define CATCH_POSITION_OFFSET 0.05f
 #define TOLERANCE 0.1f
 
@@ -260,6 +260,20 @@ int main() {
     glClearDepth(1.0f);
     light();
 #endif
+
+    if (glfwGetKey(window, GLFW_KEY_J) == GLFW_PRESS) {
+        joint0_degree += ROTATE_SPEED;
+    } else if (glfwGetKey(window, GLFW_KEY_U) == GLFW_PRESS) {
+      joint0_degree -= ROTATE_SPEED;
+    } else if (glfwGetKey(window, GLFW_KEY_K) == GLFW_PRESS) {
+      joint1_degree += ROTATE_SPEED;
+    } else if (glfwGetKey(window, GLFW_KEY_I) == GLFW_PRESS) {
+      joint1_degree -= ROTATE_SPEED;
+    } else if (glfwGetKey(window, GLFW_KEY_L) == GLFW_PRESS) {
+      joint2_degree += ROTATE_SPEED;
+    } else if (glfwGetKey(window, GLFW_KEY_O) == GLFW_PRESS) {
+      joint2_degree -= ROTATE_SPEED;
+    }
 
     /* TODO#4-2: Update joint degrees
      *       1. Finish keyCallback to detect key events
