@@ -325,14 +325,14 @@ int main() {
      *       The cylinder's color can refer to `RED`
      */
 
-    if (pick == 0) {
-      glPushMatrix();
-      glTranslatef(target_pos.x, target_pos.y, target_pos.z);
-      glColor3f(RED);
-      glScalef(TARGET_RADIUS, TARGET_HEIGHT, TARGET_RADIUS);
-      drawUnitCylinder();
-      glPopMatrix();
-    }
+    //if (pick == 0) {
+    glPushMatrix();
+    glTranslatef(target_pos.x, target_pos.y, target_pos.z);
+    glColor3f(RED);
+    glScalef(TARGET_RADIUS, TARGET_HEIGHT, TARGET_RADIUS);
+    drawUnitCylinder();
+    glPopMatrix();
+    //}
 
     /* TODO#3: Render the robotic arm
      *       1. Render the base
@@ -405,12 +405,12 @@ int main() {
     glPopMatrix();
 
     if (pick == 1) {
-      glPushMatrix();
-      glTranslatef(0.0, ARM_LEN, 0.0);
-      glColor3f(RED);
-      glScalef(TARGET_RADIUS, TARGET_HEIGHT, TARGET_RADIUS);
-      drawUnitCylinder();
-      glPopMatrix();
+      // glPushMatrix();
+      // glTranslatef(0.0, ARM_LEN, 0.0);
+      // glColor3f(RED);
+      // glScalef(TARGET_RADIUS, TARGET_HEIGHT, TARGET_RADIUS);
+      // drawUnitCylinder();
+      // glPopMatrix();
 
       target_pos.x = robot_x;
       target_pos.y = robot_y;
