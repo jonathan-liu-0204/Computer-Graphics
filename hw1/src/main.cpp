@@ -261,8 +261,16 @@ int main() {
     light();
 #endif
 
+    /* TODO#4-2: Update joint degrees
+     *       1. Finish keyCallback to detect key events
+     *       2. Update jointx_degree if the correspond key is pressed
+     * Note:
+     *       You can use `ROTATE_SPEED` as the speed constant. 
+     *       If the rotate speed is too slow or too fast, please change `ROTATE_SPEED` value
+     */
+
     if (glfwGetKey(window, GLFW_KEY_J) == GLFW_PRESS) {
-        joint0_degree += ROTATE_SPEED;
+      joint0_degree += ROTATE_SPEED;
     } else if (glfwGetKey(window, GLFW_KEY_U) == GLFW_PRESS) {
       joint0_degree -= ROTATE_SPEED;
     } else if (glfwGetKey(window, GLFW_KEY_K) == GLFW_PRESS) {
@@ -274,14 +282,6 @@ int main() {
     } else if (glfwGetKey(window, GLFW_KEY_O) == GLFW_PRESS) {
       joint2_degree -= ROTATE_SPEED;
     }
-
-    /* TODO#4-2: Update joint degrees
-     *       1. Finish keyCallback to detect key events
-     *       2. Update jointx_degree if the correspond key is pressed
-     * Note:
-     *       You can use `ROTATE_SPEED` as the speed constant. 
-     *       If the rotate speed is too slow or too fast, please change `ROTATE_SPEED` value
-     */
 
     /* TODO#5: Catch the target object with robotic arm
      *       1. Calculate coordinate of the robotic arm endpoint
