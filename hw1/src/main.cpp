@@ -304,13 +304,12 @@ int main() {
     if (space_pressed == 1) {
       // Calculate the distance to the target
         
-     if (distance < TOLERANCE) {
+      if (distance < TOLERANCE) {
         pick = 1;
-        
       } else {
-        target_x = robot_x;
-        target_y = robot_y;
-        target_z = robot_z;
+        // target_x = robot_x;
+        // target_y = robot_y;
+        // target_z = robot_z;
         pick = 0;
       }
     }
@@ -416,6 +415,10 @@ int main() {
       glScalef(TARGET_RADIUS, TARGET_HEIGHT, TARGET_RADIUS);
       drawUnitCylinder();
       glPopMatrix();
+
+      target_x = robot_x;
+      target_y = robot_y;
+      target_z = robot_z;
     }
 
 #ifdef __APPLE__
