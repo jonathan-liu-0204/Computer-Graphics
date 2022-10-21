@@ -305,12 +305,10 @@ int main() {
         
      if (distance < TOLERANCE) {
         pick = 1;
+        target_x = robot_x;
+        target_y = robot_y;
+        target_z = robot_z;
       } else {
-        if (pick == 1) {
-          target_x = robot_x;
-          target_y = robot_y;
-          target_z = robot_z;
-        }
         pick = 0;
       }
     }
