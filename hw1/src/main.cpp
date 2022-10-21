@@ -294,21 +294,23 @@ int main() {
     glEnd();
     glPopMatrix();
 
+    robot_x = cos(glm::radians(joint0_degree)) * (ARM_LEN + JOINT_RADIUS * 2 + (JOINT_RADIUS + ARM_LEN + CATCH_POSITION_OFFSET) * cos(glm::radians( joint2_degree))) * sin(glm::radians(joint1_degree));
+    robot_y = BASE_HEIGHT + ARM_LEN + JOINT_RADIUS - (JOINT_RADIUS * 2 + ARM_LEN) * cos(glm::radians(180 - joint1_degree - joint2_degree));
+    robot_z = sin(glm::radians(joint0_degree)) * (ARM_LEN + JOINT_RADIUS * 2 + (JOINT_RADIUS + ARM_LEN + CATCH_POSITION_OFFSET) * cos(glm::radians(joint2_degree))) * sin(glm::radians(joint1_degree));
+
+    distance = sqrtf(powf(robot_x - target_x, 2) + powf(robot_y - (target_y + TARGET_HEIGHT), 2) + powf(robot_z - target_z, 2));
+
+
     if (space_pressed == 1) {
       // Calculate the distance to the target
-      robot_x = cos(glm::radians(joint0_degree)) * (ARM_LEN + JOINT_RADIUS * 2 + (JOINT_RADIUS + ARM_LEN + CATCH_POSITION_OFFSET) * cos(glm::radians( joint2_degree))) * sin(glm::radians(joint1_degree));
-      robot_y = BASE_HEIGHT + ARM_LEN + JOINT_RADIUS - (JOINT_RADIUS * 2 + ARM_LEN) * cos(glm::radians(180 - joint1_degree - joint2_degree));
-      robot_z = sin(glm::radians(joint0_degree)) * (ARM_LEN + JOINT_RADIUS * 2 + (JOINT_RADIUS + ARM_LEN + CATCH_POSITION_OFFSET) * cos(glm::radians(joint2_degree))) * sin(glm::radians(joint1_degree));
-
-      distance = sqrtf(powf(robot_x - target_x, 2) + powf(robot_y - (target_y + TARGET_HEIGHT), 2) + powf(robot_z - target_z, 2));
-
         
      if (distance < TOLERANCE) {
         pick = 1;
+        
+      } else {
         target_x = robot_x;
         target_y = robot_y;
         target_z = robot_z;
-      } else {
         pick = 0;
       }
     }
