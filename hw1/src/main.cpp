@@ -315,17 +315,17 @@ int main() {
     if (pick == 1) {
       target_pos.x =
           sin(glm::radians(joint0_degree)) * ((JOINT_RADIUS * 2 + ARM_LEN) * sin(glm::radians(joint1_degree)) +
-                                              (JOINT_RADIUS + ARM_LEN + CATCH_POSITION_OFFSET + TOLERANCE) *
+                                              (JOINT_RADIUS + ARM_LEN + CATCH_POSITION_OFFSET + TOLERANCE / 2) *
                                                   sin(glm::radians(180 - joint1_degree - joint2_degree)));
 
       target_pos.y = BASE_HEIGHT + ARM_LEN + JOINT_RADIUS +
                      (JOINT_RADIUS * 2 + ARM_LEN) * cos(glm::radians(joint1_degree)) -
-                     (JOINT_RADIUS + ARM_LEN + CATCH_POSITION_OFFSET + TOLERANCE) *
+                     (JOINT_RADIUS + ARM_LEN + CATCH_POSITION_OFFSET + TOLERANCE / 2) *
                          cos(glm::radians(180 - joint1_degree - joint2_degree));
 
       target_pos.z =
           cos(glm::radians(joint0_degree)) * ((JOINT_RADIUS * 2 + ARM_LEN) * sin(glm::radians(joint1_degree)) +
-                                              (JOINT_RADIUS + ARM_LEN + CATCH_POSITION_OFFSET + TOLERANCE) *
+                                              (JOINT_RADIUS + ARM_LEN + CATCH_POSITION_OFFSET + TOLERANCE / 2) *
                                                   sin(glm::radians(180 - joint1_degree - joint2_degree)));
     }
 
