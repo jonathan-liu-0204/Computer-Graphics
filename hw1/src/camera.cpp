@@ -73,12 +73,6 @@ void Camera::updateViewMatrix() {
     glm::vec3 cameraDirection = glm::normalize(position - cameraTarget);
 
     right = glm::normalize(glm::cross(up, cameraDirection));
-
-    //glm::vec3 direction;
-    /*direction.x = cos(-rotation.y) * cos(rotation.x);
-    direction.y = sin(rotation.x);
-    direction.z = sin(-rotation.y) * cos(rotation.x);
-    front = glm::normalize(direction);*/
     
     viewMatrix = glm::identity<glm::mat4>();
     viewMatrix = glm::lookAt(position, position + front, up);
