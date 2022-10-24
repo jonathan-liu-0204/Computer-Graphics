@@ -54,6 +54,10 @@ float target_x = target_pos.x;
 float target_y = target_pos.y;
 float target_z = target_pos.z;
 
+float buffer_target_x = target_pos.x;
+float buffer_target_y = target_pos.y;
+float buffer_target_z = target_pos.z;
+
 void resizeCallback(GLFWwindow* window, int width, int height) {
   OpenGLContext::framebufferResizeCallback(window, width, height);
   auto ptr = static_cast<Camera*>(glfwGetWindowUserPointer(window));
@@ -84,10 +88,9 @@ void keyCallback(GLFWwindow* window, int key, int, int action, int) {
 
   if (key == GLFW_KEY_SPACE) {
      space_pressed = 1;
-  }
-  else {
-      space_pressed = 0;
-    }  
+  } else {
+     space_pressed = 0;
+   }  
 
   switch (key) { 
     //BASE ROTATE CLOCKWISE
@@ -287,18 +290,20 @@ int main() {
       joint2_degree -= ROTATE_SPEED;
     }
 
-    robot_x = cos(glm::radians(joint0_degree)) *
-              (ARM_LEN + JOINT_RADIUS * 2 +
-               (JOINT_RADIUS + ARM_LEN + CATCH_POSITION_OFFSET) * cos(glm::radians(joint2_degree))) *
-              sin(glm::radians(joint1_degree));
+    if (glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS) {
+      space_pressed = 1;
+    } else{
+      space_pressed = 0;
+    }
 
-    robot_y = BASE_HEIGHT + ARM_LEN + JOINT_RADIUS -
-              (JOINT_RADIUS * 2 + ARM_LEN) * cos(glm::radians(180 - joint1_degree - joint2_degree));
+    robot_x = sin(glm::radians(joint0_degree)) * ((JOINT_RADIUS * 2 + ARM_LEN) * sin(glm::radians(joint1_degree)) +
+               (JOINT_RADIUS + ARM_LEN) * sin(glm::radians(180 - joint1_degree - joint2_degree)));
 
-    robot_z = sin(glm::radians(joint0_degree)) *
-              (ARM_LEN + JOINT_RADIUS * 2 +
-               (JOINT_RADIUS + ARM_LEN + CATCH_POSITION_OFFSET) * cos(glm::radians(joint2_degree))) *
-              sin(glm::radians(joint1_degree));
+   robot_y = BASE_HEIGHT + ARM_LEN + JOINT_RADIUS + (JOINT_RADIUS * 2 + ARM_LEN) * cos(glm::radians(joint1_degree)) -
+              (JOINT_RADIUS + ARM_LEN + CATCH_POSITION_OFFSET) * cos(glm::radians(180 - joint1_degree - joint2_degree));
+
+    robot_z = cos(glm::radians(joint0_degree)) * ((JOINT_RADIUS * 2 + ARM_LEN) * sin(glm::radians(joint1_degree)) +
+              (JOINT_RADIUS + ARM_LEN) * sin(glm::radians(180 - joint1_degree - joint2_degree)));
 
     /* TODO#5: Catch the target object with robotic arm
      *       1. Calculate coordinate of the robotic arm endpoint
@@ -312,32 +317,26 @@ int main() {
      *       and refer to `CATCH_POSITION_OFFSET` and `TOLERANCE`
      */
 
-    if (pick == 1) {
-      target_pos.x =
-          sin(glm::radians(joint0_degree)) * ((JOINT_RADIUS * 2 + ARM_LEN) * sin(glm::radians(joint1_degree)) +
-                                              (JOINT_RADIUS + ARM_LEN + CATCH_POSITION_OFFSET + TOLERANCE / 2) *
-                                                  sin(glm::radians(180 - joint1_degree - joint2_degree)));
+    distance = sqrtf(powf(robot_x - target_x, 2) + powf(robot_y - target_y, 2) + powf(robot_z - target_z, 2));
 
-      target_pos.y = BASE_HEIGHT + ARM_LEN + JOINT_RADIUS +
-                     (JOINT_RADIUS * 2 + ARM_LEN) * cos(glm::radians(joint1_degree)) -
-                     (JOINT_RADIUS + ARM_LEN + CATCH_POSITION_OFFSET + TOLERANCE / 2) *
-                         cos(glm::radians(180 - joint1_degree - joint2_degree));
-
-      target_pos.z =
-          cos(glm::radians(joint0_degree)) * ((JOINT_RADIUS * 2 + ARM_LEN) * sin(glm::radians(joint1_degree)) +
-                                              (JOINT_RADIUS + ARM_LEN + CATCH_POSITION_OFFSET + TOLERANCE / 2) *
-                                                  sin(glm::radians(180 - joint1_degree - joint2_degree)));
-    }
-
-    distance = sqrtf(powf(robot_x - target_pos.x, 2) + powf(robot_y - (target_pos.y + TARGET_HEIGHT / 2), 2) + powf(robot_z - target_pos.z, 2));
-
-    if (space_pressed == 1) {
-      if (distance < TOLERANCE) {
+    if (space_pressed == 1 && distance <= TOLERANCE) {
         pick = 1;
-      } else {
+    } else {
         pick = 0;
-      }
     }
+
+
+    if (pick == 1) {
+      target_x = sin(glm::radians(joint0_degree)) * ((JOINT_RADIUS * 2 + ARM_LEN) * sin(glm::radians(joint1_degree)) +
+          (JOINT_RADIUS + ARM_LEN + CATCH_POSITION_OFFSET) * sin(glm::radians(180 - joint1_degree - joint2_degree)));
+
+      target_y = BASE_HEIGHT + ARM_LEN + JOINT_RADIUS + (JOINT_RADIUS * 2 + ARM_LEN) * cos(glm::radians(joint1_degree)) -
+          (JOINT_RADIUS + ARM_LEN) * cos(glm::radians(180 - joint1_degree - joint2_degree));
+
+      target_z = cos(glm::radians(joint0_degree)) * ((JOINT_RADIUS * 2 + ARM_LEN) * sin(glm::radians(joint1_degree)) +
+          (JOINT_RADIUS + ARM_LEN + CATCH_POSITION_OFFSET) * sin(glm::radians(180 - joint1_degree - joint2_degree)));
+    }
+
 
     // Render a white board
     glPushMatrix();
@@ -368,7 +367,7 @@ int main() {
      */
 
     glPushMatrix();
-    glTranslatef(target_pos.x, target_pos.y, target_pos.z);
+    glTranslatef(target_x, target_y, target_z);
     glColor3f(RED);
     glScalef(TARGET_RADIUS, TARGET_HEIGHT, TARGET_RADIUS);
     drawUnitCylinder();
@@ -393,7 +392,7 @@ int main() {
 
     // BASE    
     glRotatef(joint0_degree, 0.0, 1.0, 0.0);
-    glTranslatef(0.0f, 0.0, 0.0f);
+    glTranslatef(0.0f, 0.0f, 0.0f);
     glPushMatrix();
     glColor3f(GREEN);
     glScalef(BASE_RADIUS, BASE_HEIGHT, BASE_RADIUS);
@@ -401,7 +400,7 @@ int main() {
     glPopMatrix();
 
     // FIRST ARM
-    glTranslatef(0.0f, 0.0f, 0.0f);
+    glTranslatef(0.0f, BASE_HEIGHT, 0.0f);
     glPushMatrix();
     glColor3f(BLUE);
     glScalef(ARM_RADIUS, ARM_LEN, ARM_RADIUS);
