@@ -117,7 +117,7 @@ int main() {
   /* TODO#0: Change window title to "HW2 - `your student id`"
    *         Ex. HW2 - 311550000
    */
-  glfwSetWindowTitle(window, "HW2");
+  glfwSetWindowTitle(window, "HW2 - 311605004");
 
   // Init Camera helper
   Camera camera(glm::vec3(0, 2, 5));
