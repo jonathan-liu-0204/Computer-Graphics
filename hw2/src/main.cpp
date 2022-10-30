@@ -62,15 +62,15 @@ void loadPrograms() {
 
 void loadModels() {
   // TODO#1-1 Commnet out example object and uncomment models
-  Model* m = new Model();
-  float pos[] = {-1, 0, -1, -1, 0, 1, 1, 0, 1, 1, 0, -1};
-  for (int i = 0; i < 12; i++) {
-    m->positions.push_back(pos[i]);
-  }
-  m->numVertex = 4;
-  m->drawMode = GL_QUADS;
-  ctx.models.push_back(m);
-  /*
+  // Model* m = new Model();
+  // float pos[] = {-1, 0, -1, -1, 0, 1, 1, 0, 1, 1, 0, -1};
+  // for (int i = 0; i < 12; i++) {
+  //   m->positions.push_back(pos[i]);
+  // }
+  // m->numVertex = 4;
+  // m->drawMode = GL_QUADS;
+  // ctx.models.push_back(m);
+  
   Model* m = Model::fromObjectFile("../assets/models/cube/cube.obj");
   m->textures.push_back(createTexture("../assets/models/cube/texture.bmp"));
   m->modelMatrix = glm::scale(m->modelMatrix, glm::vec3(0.4f, 0.4f, 0.4f));
@@ -81,7 +81,7 @@ void loadModels() {
   m->textures.push_back(createTexture("../assets/models/Mugs/Textures/Mug_T.png"));
   m->modelMatrix = glm::scale(m->modelMatrix, glm::vec3(6.0f, 6.0f, 6.0f));
   ctx.models.push_back(m);
-  */
+  
   /* TODO#3-1: Add a plane model
    *           1. Create a model and manually set plane positions, normals, texcoords
    *           2. Add texure "../assets/models/Wood_maps/AT_Wood_01_4096x2560_DIFF.jpg"
@@ -95,8 +95,8 @@ void loadModels() {
 
 void setupObjects() {
   // TODO#1-2 Comment out example object and uncomment model object
-  ctx.objects.push_back(new Object(0, glm::translate(glm::identity<glm::mat4>(), glm::vec3(0, 0 ,0))));
-  /*
+  // ctx.objects.push_back(new Object(0, glm::translate(glm::identity<glm::mat4>(), glm::vec3(0, 0 ,0))));
+  
   ctx.objects.push_back(new Object(0, glm::translate(glm::identity<glm::mat4>(), glm::vec3(1.5, 0.2, 2))));
   (*ctx.objects.rbegin())->material = mFlatwhite;
   ctx.objects.push_back(new Object(0, glm::translate(glm::identity<glm::mat4>(), glm::vec3(2.5, 0.2, 2))));
@@ -106,7 +106,7 @@ void setupObjects() {
   ctx.objects.push_back(new Object(1, glm::translate(glm::identity<glm::mat4>(), glm::vec3(3, 0.3, 3))));
   ctx.objects.push_back(new Object(1, glm::translate(glm::identity<glm::mat4>(), glm::vec3(4, 0.3, 3))));
   (*ctx.objects.rbegin())->textureIndex = 1;
-  */
+  
 
   // TODO#3-2: Put the plane into scene
 }
