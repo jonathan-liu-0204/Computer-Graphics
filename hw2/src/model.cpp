@@ -115,7 +115,7 @@ Model* Model::fromObjectFile(const char* obj_file) {
 		}
 	}
 
-	m -> numVertex = total;
+	m -> numVertex = total*3;
 
 	if (ObjFile.is_open()) ObjFile.close();
 
