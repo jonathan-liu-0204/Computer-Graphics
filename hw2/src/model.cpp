@@ -40,8 +40,16 @@ Model* Model::fromObjectFile(const char* obj_file) {
 	std::string prefix = "";
 	std::stringstream ss;
 
+	std::vector<glm::vec3> tmp_positions;
+	std::vector<glm::vec3> tmp_normals;
+	std::vector<glm::vec2> tmp_textcoords;
+
 	glm::vec2 temp_vec2;
 	glm::vec3 temp_vec3;
+
+	tmp_positions.push_back(temp_vec3);
+	tmp_normals.push_back(temp_vec3);
+	tmp_textcoords.push_back(temp_vec2);
 
 	std::vector<GLint> vertex_position_indicies;
 	std::vector<GLint> vertex_texcoord_indicies;
@@ -58,31 +66,36 @@ Model* Model::fromObjectFile(const char* obj_file) {
 
 		if (prefix == "v") {
 			ss >> temp_vec3.x >> temp_vec3.y >> temp_vec3.z;
-			m->positions.push_back(temp_vec3.x);
-			m->positions.push_back(temp_vec3.y);
-			m->positions.push_back(temp_vec3.z);
+			tmp_positions.push_back(temp_vec3);
 		}
 		else if (prefix == "vn") {
 			ss >> temp_vec3.x >> temp_vec3.y >> temp_vec3.z;
-			m->normals.push_back(temp_vec3.x);
-			m->normals.push_back(temp_vec3.y);
-			m->normals.push_back(temp_vec3.z);
+			tmp_normals.push_back(temp_vec3);
 		}
 		else if (prefix == "vt") {
 			ss >> temp_vec2.x >> temp_vec2.y;
-			m->texcoords.push_back(temp_vec2.x);
-			m->texcoords.push_back(temp_vec2.y);
+			tmp_textcoords.push_back(temp_vec2);
 		}
 		else if (prefix == "f") {
 			int counter = 0;
 			while (ss >> temp_glint) {
 				// Pushing indices into correct arrays
-				if (counter == 0)
-					vertex_position_indicies.push_back(temp_glint);
-				else if (counter == 1)
-					vertex_texcoord_indicies.push_back(temp_glint);
-				else if (counter == 2)
-					vertex_normal_indicies.push_back(temp_glint);
+				if (counter == 0){
+					m->positions.push_back(tmp_positions[temp_glint].x);
+					m->positions.push_back(tmp_positions[temp_glint].y);
+					m->positions.push_back(tmp_positions[temp_glint].z);
+				}
+				else if (counter == 1){
+					//vertex_texcoord_indicies.push_back(temp_glint);
+					m->texcoords.push_back(tmp_textcoords[temp_glint].x);
+					m->texcoords.push_back(tmp_textcoords[temp_glint].y);
+				}
+				else if (counter == 2){
+					//vertex_normal_indicies.push_back(temp_glint);
+					m->normals.push_back(tmp_normals[temp_glint].x);
+					m->normals.push_back(tmp_normals[temp_glint].y);
+					m->normals.push_back(tmp_normals[temp_glint].z);
+				}
 
 				// Handling characters
 				if (ss.peek() == '/') {
