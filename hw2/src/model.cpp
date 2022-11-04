@@ -51,11 +51,12 @@ Model* Model::fromObjectFile(const char* obj_file) {
 	tmp_normals.push_back(temp_vec3);
 	tmp_textcoords.push_back(temp_vec2);
 
-	std::vector<GLint> vertex_position_indicies;
-	std::vector<GLint> vertex_texcoord_indicies;
-	std::vector<GLint> vertex_normal_indicies;
+	// std::vector<GLint> vertex_position_indicies;
+	// std::vector<GLint> vertex_texcoord_indicies;
+	// std::vector<GLint> vertex_normal_indicies;
 
 	int tmp_vertexnums = 0;
+	int total = 0;
 
 	GLint temp_glint = 0;
 
@@ -77,6 +78,7 @@ Model* Model::fromObjectFile(const char* obj_file) {
 			tmp_textcoords.push_back(temp_vec2);
 		}
 		else if (prefix == "f") {
+			total++;
 			int counter = 0;
 			while (ss >> temp_glint) {
 				// Pushing indices into correct arrays
@@ -113,7 +115,7 @@ Model* Model::fromObjectFile(const char* obj_file) {
 		}
 	}
 
-	m -> numVertex = int(vertex_position_indicies.size());
+	m -> numVertex = total;
 
 	if (ObjFile.is_open()) ObjFile.close();
 
