@@ -91,6 +91,29 @@ void loadModels() {
    *           GL_TEXTURE_WRAP is set to GL_REPEAT in createTexture, you may need to know
    *           what this means to set m->textures correctly
    */
+
+  m = new Model();
+  //float pos[] = {0, 0, 0, 0, 0, 5.12, 8.192, 0, 5.12, 8.192, 0, 0};
+  float pos[] = {-4.096, 0, -2.56, -4.096, 0, 2.56, 4.096, 0, 2.56, 4.096, 0, -2.56};
+  //float pos[] = {-1, 0, -1, -1, 0, 1, 1, 0, 1, 1, 0, -1};
+  float nor[] = {0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0};
+  float texco[] = {0.0, 0.0, 0.0, 2.0, 2.0, 2.0, 2.0, 0.0};
+
+  for (int i = 0; i < 12; i++) {
+    m->positions.push_back(pos[i]);
+    m->normals.push_back(nor[i]);
+  }
+
+  for (int i = 0; i < 8; i++) {
+    m->texcoords.push_back(texco[i]);
+  }
+
+  m->textures.push_back(createTexture("../assets/models/Wood_maps/AT_Wood.jpg"));
+
+  m->numVertex = 12;
+  m->drawMode = GL_QUADS;
+
+  ctx.models.push_back(m);
 }
 
 void setupObjects() {
@@ -109,6 +132,7 @@ void setupObjects() {
   
 
   // TODO#3-2: Put the plane into scene
+  ctx.objects.push_back(new Object(2, glm::translate(glm::identity<glm::mat4>(), glm::vec3(4.096, 0 ,2.56))));
 }
 
 int main() {

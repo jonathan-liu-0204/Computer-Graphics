@@ -28,8 +28,6 @@ bool BasicProgram::load() {
 
   glGenVertexArrays(num_model, VAO);
 
-  std::cout << "num_model: " << num_model << std::endl;
-
   for (int i = 0; i < num_model; i++) {
     glBindVertexArray(VAO[i]);
     Model* model = ctx->models[i];
@@ -84,8 +82,6 @@ void BasicProgram::doMainLoop() {
     glUseProgram(programId);
     int obj_num = (int)ctx->objects.size();
 
-    std::cout << "obj_num: " << obj_num << std::endl;
-
     for (int i = 0; i < obj_num; i++) {
         int modelIndex = ctx->objects[i]->modelIndex;
         glBindVertexArray(VAO[modelIndex]);
@@ -104,11 +100,8 @@ void BasicProgram::doMainLoop() {
         GLint mmatLoc = glGetUniformLocation(programId, "ModelMatrix");
         glUniformMatrix4fv(mmatLoc, 1, GL_FALSE, m);
 
-        glActiveTexture(GL_TEXTURE0);
-        glBindTexture(GL_TEXTURE_2D, glGetUniformLocation(programId, "ourTexture"));
-        glUniform1i(glGetUniformLocation(programId, "ourTexture"), ctx->objects[i]->textureIndex);
-        glActiveTexture(GL_TEXTURE1);
-        glBindTexture(GL_TEXTURE_2D, glGetUniformLocation(programId, "ourTexture"));
+        glActiveTexture(GL_TEXTURE0 + ctx->objects[i]->textureIndex);
+        glBindTexture(GL_TEXTURE_2D, model->textures[ctx->objects[i]->textureIndex]);
         glUniform1i(glGetUniformLocation(programId, "ourTexture"), ctx->objects[i]->textureIndex);
 
         glDrawArrays(model->drawMode, 0, model->numVertex);
