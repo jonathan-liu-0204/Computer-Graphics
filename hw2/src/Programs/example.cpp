@@ -11,6 +11,8 @@ bool ExampleProgram::load() {
 
   glGenVertexArrays(num_model, VAO);
 
+  std::cout << "Example num_model: " << num_model << std::endl;
+
   for (int i = 0; i < num_model; i++) {
     glBindVertexArray(VAO[i]);
     Model* model = ctx->models[i];

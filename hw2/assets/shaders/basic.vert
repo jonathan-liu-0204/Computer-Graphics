@@ -25,10 +25,6 @@ out vec2 TexCoord;
 //          c. You may sample color for this vertex with texture function
 
 void main() {
-	// gl_Position = vec4(0.0, 0.0, 0.0, 1.0);
-	// TexCoord = vec2(0.0, 0.0);
-
-	gl_Position = Projection * ViewMatrix * ModelMatrix * vec4(position, 1.0f);
-
+	gl_Position = Projection * ViewMatrix * ModelMatrix * vec4(position.x, position.y, position.z, 1.0);
 	TexCoord = texCoord;
 }

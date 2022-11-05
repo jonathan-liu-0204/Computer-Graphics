@@ -1,14 +1,2 @@
-﻿  main.cpp
-C:\Users\jonat\Desktop\Computer-Graphics\hw1\src\main.cpp(164,29): warning C4305: '正在初始化': 從 'double' 轉換為 'GLfloat'，是由較大的類型轉換為較小的類型，可能導致資料遺失
-C:\Users\jonat\Desktop\Computer-Graphics\hw1\src\main.cpp(168,17): warning C4244: '=': 將 'double' 轉換為 'GLfloat'，由於類型不同，可能導致資料遺失
-C:\Users\jonat\Desktop\Computer-Graphics\hw1\src\main.cpp(169,17): warning C4244: '=': 將 'double' 轉換為 'GLfloat'，由於類型不同，可能導致資料遺失
-C:\Users\jonat\Desktop\Computer-Graphics\hw1\src\main.cpp(181,21): warning C4305: '=': 從 'double' 轉換為 'GLfloat'，是由較大的類型轉換為較小的類型，可能導致資料遺失
-C:\Users\jonat\Desktop\Computer-Graphics\hw1\src\main.cpp(183,15): warning C4244: '=': 將 'double' 轉換為 'GLfloat'，由於類型不同，可能導致資料遺失
-C:\Users\jonat\Desktop\Computer-Graphics\hw1\src\main.cpp(184,15): warning C4244: '=': 將 'double' 轉換為 'GLfloat'，由於類型不同，可能導致資料遺失
-C:\Users\jonat\Desktop\Computer-Graphics\hw1\src\main.cpp(194,21): warning C4305: '=': 從 'double' 轉換為 'GLfloat'，是由較大的類型轉換為較小的類型，可能導致資料遺失
-C:\Users\jonat\Desktop\Computer-Graphics\hw1\src\main.cpp(196,15): warning C4244: '=': 將 'double' 轉換為 'GLfloat'，由於類型不同，可能導致資料遺失
-C:\Users\jonat\Desktop\Computer-Graphics\hw1\src\main.cpp(197,15): warning C4244: '=': 將 'double' 轉換為 'GLfloat'，由於類型不同，可能導致資料遺失
-C:\Users\jonat\Desktop\Computer-Graphics\hw1\src\main.cpp(207,47): warning C4305: '正在初始化': 從 'double' 轉換為 'GLfloat'，是由較大的類型轉換為較小的類型，可能導致資料遺失
-C:\Users\jonat\Desktop\Computer-Graphics\hw1\src\main.cpp(208,46): warning C4305: '正在初始化': 從 'double' 轉換為 'GLfloat'，是由較大的類型轉換為較小的類型，可能導致資料遺失
-C:\Users\jonat\Desktop\Computer-Graphics\hw1\src\main.cpp(209,46): warning C4305: '正在初始化': 從 'double' 轉換為 'GLfloat'，是由較大的類型轉換為較小的類型，可能導致資料遺失
+﻿  camera.cpp
   HW1.vcxproj -> C:\Users\jonat\Desktop\Computer-Graphics\hw1\bin\HW1.exe
