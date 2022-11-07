@@ -17,8 +17,7 @@ struct Material {
     float shininess;
 }; 
 
-struct DirectionLight
-{
+struct DirectionLight {
     int enable;
     vec3 direction;
     vec3 lightColor;
@@ -53,5 +52,25 @@ uniform PointLight pl;
 uniform Spotlight sl;
 
 void main() {
+    float ks = 0.75;
+    float kd = 0.75;
+
     color = vec4(0.0, 0.0, 0.0, 1.0);
+    //color = texture2D(ourTexture, TexCoord);
+
+    if(dl.enable == 1){
+       // material.diffuse = kd * max(dot(Normal, dl.direction), 0.0);
+       material.specular = ks * pow(max(dot(Normal, (dl.direction/2)), 0.0), material.shininess);
+       dl.lightColor = material.ambient + (kd * max(dot(Normal, dl.direction), 0.0)) + material.specular;
+    }
+
+    if(pl.enable == 1){
+
+    }
+
+    if(sl.enable == 1){
+    
+    }
+
+    color = (dl.lightColor, 1.0);
 }

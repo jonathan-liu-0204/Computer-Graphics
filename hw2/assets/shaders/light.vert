@@ -38,7 +38,12 @@ out vec3 FragPos;
 
 void main() {
   gl_Position = vec4(0.0, 0.0, 0.0, 1.0);
-  TexCoord = vec2(0.0, 0.0);
-  FragPos = vec4(0.0, 0.0, 0.0);
-  Normal = vec4(0.0, 0.0, 0.0);
+  // TexCoord = vec2(0.0, 0.0);
+  FragPos = vec3(0.0, 0.0, 0.0);
+  Normal = vec3(0.0, 0.0, 0.0);
+
+  gl_Position = ViewMatrix * Projection * ModelMatrix * vec4(position, 1.0);
+  TexCoord = texCoord;
+  FragPos = vec3(ModelMatrix * vec4(position, 1.0));
+  Normal = normalize(normal);
 }

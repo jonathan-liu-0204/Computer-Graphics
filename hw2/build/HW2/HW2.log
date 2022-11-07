@@ -1,3 +1,2 @@
-﻿  main.cpp
-C:\Users\jonat\Desktop\Computer-Graphics\hw2\src\main.cpp(97,84): warning C4305: '正在初始化': 從 'double' 轉換為 'float'，是由較大的類型轉換為較小的類型，可能導致資料遺失
+﻿  light.cpp
   HW2.vcxproj -> C:\Users\jonat\Desktop\Computer-Graphics\hw2\bin\HW2.exe
