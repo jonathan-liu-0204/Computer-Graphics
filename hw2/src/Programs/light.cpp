@@ -59,17 +59,63 @@ void LightProgram::doMainLoop() {
    *           2. material parameter for each object get be found in ctx->objects[i]->material
    */
 
-  programId = quickCreateProgram(vertProgramFile, fragProgramFIle);
+    glUseProgram(programId);
+    int obj_num = (int)ctx->objects.size();
 
-  int num_model = (int)ctx->models.size();
-  VAO = new GLuint[num_model];
+    for (int i = 0; i < obj_num; i++) {
+        int modelIndex = ctx->objects[i]->modelIndex;
+        glBindVertexArray(VAO[modelIndex]);
 
-  glGenVertexArrays(num_model, VAO);
+        Model* model = ctx->models[modelIndex];
 
-  for (int i = 0; i < num_model; i++) {
-    glBindVertexArray(VAO[i]);
-    Model* model = ctx->models[i];
+        Context context_content;
+
+        const float* p = ctx->camera->getProjectionMatrix();
+        GLint pmatLoc = glGetUniformLocation(programId, "Projection");
+        glUniformMatrix4fv(pmatLoc, 1, GL_FALSE, p);
+
+        const float* v = ctx->camera->getViewMatrix();
+        GLint vmatLoc = glGetUniformLocation(programId, "ViewMatrix");
+        glUniformMatrix4fv(vmatLoc, 1, GL_FALSE, v);
+
+        const float* m = glm::value_ptr(ctx->objects[i]->transformMatrix * model->modelMatrix);
+        GLint mmatLoc = glGetUniformLocation(programId, "ModelMatrix");
+        glUniformMatrix4fv(mmatLoc, 1, GL_FALSE, m); 
+
+        const float* nm = glm::value_ptr(glm::transpose(glm::inverse(model->modelMatrix)));
+        GLint nmmatLoc = glGetUniformLocation(programId, "ModelNormalMatrix");
+        glUniformMatrix4fv(nmmatLoc, 1, GL_FALSE, nm); 
+
+        const float* material_ambient = glm::value_ptr(ctx->objects[i]->material.ambient);
+        GLint Material_ambient = glGetUniformLocation(programId, "material.ambient");
+        glUniform3fv(Material_ambient, 1, material_ambient);
+
+        const float* material_diffuse = glm::value_ptr(ctx->objects[i]->material.diffuse);
+        GLint Material_diffuse = glGetUniformLocation(programId, "material.diffuse");
+        glUniform3fv(Material_diffuse, 1, material_diffuse);
+
+        const float* material_specular = glm::value_ptr(ctx->objects[i]->material.specular);
+        GLint Material_specular = glGetUniformLocation(programId, "material.specular");
+        glUniform3fv(Material_specular, 1, material_specular);
+
+        GLint Material_shininess = glGetUniformLocation(programId, "material.shininess");
+        glUniform1f(Material_shininess, ctx->objects[i]->material.shininess);
 
 
-  }
+        GLint DirectionLight_enable = glGetUniformLocation(programId, "dl.enable");
+        glUniform1i(DirectionLight_enable, ctx->directionLightEnable);
+
+        std::cout << "ctx->directionLightEnable: " << ctx->directionLightEnable << std::endl;
+
+        const float* dl_direction = glm::value_ptr(ctx->directionLightDirection);
+        GLint DirectionLight_direction = glGetUniformLocation(programId, "dl.direction");
+        glUniform3fv(DirectionLight_enable, 1, dl_direction);
+
+        const float* dl_lightcolor = glm::value_ptr(ctx->directionLightColor);
+        GLint DirectionLight_LightColor = glGetUniformLocation(programId, "dl.LightColor");
+        glUniform3fv(DirectionLight_LightColor, 1, dl_lightcolor);
+
+        glDrawArrays(model->drawMode, 0, model->numVertex);
+    }
+    glUseProgram(0);
 }
