@@ -84,6 +84,7 @@ void LightProgram::doMainLoop() {
         GLint nmmatLoc = glGetUniformLocation(programId, "ModelNormalMatrix");
         glUniformMatrix4fv(nmmatLoc, 1, GL_FALSE, nm); 
 
+
         const float* material_ambient = glm::value_ptr(ctx->objects[i]->material.ambient);
         GLint Material_ambient = glGetUniformLocation(programId, "material.ambient");
         glUniform3fv(Material_ambient, 1, material_ambient);
@@ -100,18 +101,16 @@ void LightProgram::doMainLoop() {
         glUniform1f(Material_shininess, ctx->objects[i]->material.shininess);
 
 
-        GLint DirectionLight_enable = glGetUniformLocation(programId, "dl.enable");
-        glUniform1i(DirectionLight_enable, ctx->directionLightEnable);
-
-        std::cout << "ctx->directionLightEnable: " << ctx->directionLightEnable << std::endl;
+        GLint DL_enable = glGetUniformLocation(programId, "dl.enable");
+        glUniform1i(DL_enable, ctx->directionLightEnable);
 
         const float* dl_direction = glm::value_ptr(ctx->directionLightDirection);
-        GLint DirectionLight_direction = glGetUniformLocation(programId, "dl.direction");
-        glUniform3fv(DirectionLight_enable, 1, dl_direction);
+        GLint DL_direction = glGetUniformLocation(programId, "dl.direction");
+        glUniform3fv(DL_direction, 1, dl_direction);
 
         const float* dl_lightcolor = glm::value_ptr(ctx->directionLightColor);
-        GLint DirectionLight_LightColor = glGetUniformLocation(programId, "dl.LightColor");
-        glUniform3fv(DirectionLight_LightColor, 1, dl_lightcolor);
+        GLint DL_LightColor = glGetUniformLocation(programId, "dl.lightColor");
+        glUniform3fv(DL_LightColor, 1, dl_lightcolor);
 
         glDrawArrays(model->drawMode, 0, model->numVertex);
     }

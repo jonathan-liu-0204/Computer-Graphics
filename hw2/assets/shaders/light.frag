@@ -48,19 +48,27 @@ struct Spotlight {
 
 uniform Material material;
 uniform DirectionLight dl;
-uniform PointLight pl;
-uniform Spotlight sl;
+// uniform PointLight pl;
+// uniform Spotlight sl;
+
+vec3 diffuse;
+vec3 specular;
+vec3 tmp_dl_lightColor;
+vec3 viewDir;
+vec3 halfwayDir;
 
 void main() {
     //color = vec4(0.0, 0.0, 0.0, 1.0);
     color = texture2D(ourTexture, TexCoord);
 
+    viewDir = normalize(viewPos - FragPos);
+
    if(dl.enable == 1){
-        // vec3 diffuse = material.diffuse * max(dot(Normal, dl.direction), 0.0);
-        // vec3 specular = material.specular * pow(max(dot(Normal, dl.direction / 2), 0.0), material.shininess);
-        // vec3 tmp_dl_lightColor = dl.lightColor;
-        // tmp_dl_lightColor = tmp_dl_lightColor + material.ambient + diffuse + specular;
-        // color = color + vec4(tmp_dl_lightColor, 0.0);
-         color = texture2D(ourTexture, TexCoord);
-    }
+       halfwayDir = normalize(dl.direction + viewDir);
+       diffuse = dl.lightColor * max(dot(Normal, dl.direction), 0.0);
+       specular = material.specular * pow(max(dot(Normal, halfwayDir), 0.0), material.shininess);
+       tmp_dl_lightColor = dl.lightColor + material.ambient + diffuse + specular;
+       // color = color + vec4(tmp_dl_lightColor, 1.0);
+       color = 
+   }
 }

@@ -45,5 +45,5 @@ void main() {
   TexCoord = texCoord;
   FragPos = vec3(ModelMatrix * vec4(position, 1.0));
   Normal = mat3(ModelNormalMatrix) * normal;
-  gl_Position = ViewMatrix * Projection * ModelMatrix * vec4(position.x, position.y, position.z, 1.0);
+  gl_Position = ViewMatrix * Projection * ModelMatrix * vec4(position, 1.0);
 }
