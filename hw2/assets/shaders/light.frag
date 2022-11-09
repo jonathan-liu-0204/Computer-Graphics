@@ -52,7 +52,6 @@ uniform PointLight pl;
 uniform Spotlight sl;
 
 void main() {
-
     //color = vec4(0.0, 0.0, 0.0, 1.0);
     color = texture2D(ourTexture, TexCoord);
 
