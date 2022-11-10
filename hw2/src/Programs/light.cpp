@@ -84,9 +84,10 @@ void LightProgram::doMainLoop() {
         GLint nmmatLoc = glGetUniformLocation(programId, "ModelNormalMatrix");
         glUniformMatrix4fv(nmmatLoc, 1, GL_FALSE, nm); 
 
-        const float* vp = ctx->camera->getPosition();
-        GLint vpLoc = glGetUniformLocation(programId, "viewPos");
-        glUniform3fv(vpLoc, 1, vp);
+        glUniform3f(glGetUniformLocation(programId, "viewPos"), 
+                            ctx->camera->getPosition()[0],
+                            ctx->camera->getPosition()[1], 
+                            ctx->camera->getPosition()[2]);
 
         glActiveTexture(GL_TEXTURE0 + ctx->objects[i]->textureIndex);
         glBindTexture(GL_TEXTURE_2D, model->textures[ctx->objects[i]->textureIndex]);
@@ -95,19 +96,19 @@ void LightProgram::doMainLoop() {
         //======================================
         // Material Parameters
         glUniform3f(glGetUniformLocation(programId, "material.ambient"), 
-                            ctx->objects[i]->material.ambient.r, 
-                            ctx->objects[i]->material.ambient.g,
-                            ctx->objects[i]->material.ambient.b);
+                            ctx->objects[i]->material.ambient.x, 
+                            ctx->objects[i]->material.ambient.y,
+                            ctx->objects[i]->material.ambient.z);
 
         glUniform3f(glGetUniformLocation(programId, "material.diffuse"),
-                            ctx->objects[i]->material.diffuse.r,
-                            ctx->objects[i]->material.diffuse.g,
-                            ctx->objects[i]->material.diffuse.b);
+                            ctx->objects[i]->material.diffuse.x,
+                            ctx->objects[i]->material.diffuse.y,
+                            ctx->objects[i]->material.diffuse.z);
 
         glUniform3f(glGetUniformLocation(programId, "material.specular"), 
-                            ctx->objects[i]->material.specular.r,
-                            ctx->objects[i]->material.specular.g,
-                            ctx->objects[i]->material.specular.b);
+                            ctx->objects[i]->material.specular.x,
+                            ctx->objects[i]->material.specular.y,
+                            ctx->objects[i]->material.specular.z);
 
         glUniform1f(glGetUniformLocation(programId, "material.shininess"), 
                             ctx->objects[i]->material.shininess);
