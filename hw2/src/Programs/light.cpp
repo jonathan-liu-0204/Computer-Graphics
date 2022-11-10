@@ -84,33 +84,109 @@ void LightProgram::doMainLoop() {
         GLint nmmatLoc = glGetUniformLocation(programId, "ModelNormalMatrix");
         glUniformMatrix4fv(nmmatLoc, 1, GL_FALSE, nm); 
 
+        const float* vp = ctx->camera->getPosition();
+        GLint vpLoc = glGetUniformLocation(programId, "viewPos");
+        glUniform3fv(vpLoc, 1, vp);
 
-        const float* material_ambient = glm::value_ptr(ctx->objects[i]->material.ambient);
-        GLint Material_ambient = glGetUniformLocation(programId, "material.ambient");
-        glUniform3fv(Material_ambient, 1, material_ambient);
+        glActiveTexture(GL_TEXTURE0 + ctx->objects[i]->textureIndex);
+        glBindTexture(GL_TEXTURE_2D, model->textures[ctx->objects[i]->textureIndex]);
+        glUniform1i(glGetUniformLocation(programId, "ourTexture"), ctx->objects[i]->textureIndex);
 
-        const float* material_diffuse = glm::value_ptr(ctx->objects[i]->material.diffuse);
-        GLint Material_diffuse = glGetUniformLocation(programId, "material.diffuse");
-        glUniform3fv(Material_diffuse, 1, material_diffuse);
+        //======================================
+        // Material Parameters
+        glUniform3f(glGetUniformLocation(programId, "material.ambient"), 
+                            ctx->objects[i]->material.ambient.r, 
+                            ctx->objects[i]->material.ambient.g,
+                            ctx->objects[i]->material.ambient.b);
 
-        const float* material_specular = glm::value_ptr(ctx->objects[i]->material.specular);
-        GLint Material_specular = glGetUniformLocation(programId, "material.specular");
-        glUniform3fv(Material_specular, 1, material_specular);
+        glUniform3f(glGetUniformLocation(programId, "material.diffuse"),
+                            ctx->objects[i]->material.diffuse.r,
+                            ctx->objects[i]->material.diffuse.g,
+                            ctx->objects[i]->material.diffuse.b);
 
-        GLint Material_shininess = glGetUniformLocation(programId, "material.shininess");
-        glUniform1f(Material_shininess, ctx->objects[i]->material.shininess);
+        glUniform3f(glGetUniformLocation(programId, "material.specular"), 
+                            ctx->objects[i]->material.specular.r,
+                            ctx->objects[i]->material.specular.g,
+                            ctx->objects[i]->material.specular.b);
 
+        glUniform1f(glGetUniformLocation(programId, "material.shininess"), 
+                            ctx->objects[i]->material.shininess);
 
-        GLint DL_enable = glGetUniformLocation(programId, "dl.enable");
-        glUniform1i(DL_enable, ctx->directionLightEnable);
+        //======================================
+        // Direction Light Parameters
 
-        const float* dl_direction = glm::value_ptr(ctx->directionLightDirection);
-        GLint DL_direction = glGetUniformLocation(programId, "dl.direction");
-        glUniform3fv(DL_direction, 1, dl_direction);
+        glUniform1i(glGetUniformLocation(programId, "dl.enable"),
+                            ctx->directionLightEnable);
 
-        const float* dl_lightcolor = glm::value_ptr(ctx->directionLightColor);
-        GLint DL_LightColor = glGetUniformLocation(programId, "dl.lightColor");
-        glUniform3fv(DL_LightColor, 1, dl_lightcolor);
+        glUniform3f(glGetUniformLocation(programId, "dl.direction"),
+                            ctx->directionLightDirection.x,
+                            ctx->directionLightDirection.y, 
+                            ctx->directionLightDirection.z);
+
+        glUniform3f(glGetUniformLocation(programId, "dl.lightColor"), 
+                            ctx->directionLightColor.r,
+                            ctx->directionLightColor.g,
+                            ctx->directionLightColor.b);
+
+        //======================================
+        //Point Light Parameters
+
+        glUniform1i(glGetUniformLocation(programId, "pl.enable"),
+                            ctx->pointLightEnable);
+
+        glUniform3f(glGetUniformLocation(programId, "pl.position"),
+                            ctx->pointLightPosition.x,
+                            ctx->pointLightPosition.y,
+                            ctx->pointLightPosition.z);
+
+        glUniform3f(glGetUniformLocation(programId, "pl.lightColor"),
+                            ctx->pointLightColor.r,
+                            ctx->pointLightColor.g,
+                            ctx->pointLightColor.b);
+
+        glUniform1f(glGetUniformLocation(programId, "pl.constant"),
+                            ctx->pointLightConstant);
+
+        glUniform1f(glGetUniformLocation(programId, "pl.linear"),
+                            ctx->pointLightLinear);
+
+        glUniform1f(glGetUniformLocation(programId, "pl.quadratic"), 
+                            ctx->pointLightQuardratic);
+
+        //======================================
+        //Spotlight Parameters
+
+        glUniform1i(glGetUniformLocation(programId, "sl.enable"),
+                            ctx->spotLightEnable);
+
+        glUniform3f(glGetUniformLocation(programId, "sl.position"), 
+                            ctx->spotLightPosition.x, 
+                            ctx->spotLightPosition.y,
+                            ctx->spotLightPosition.z);
+
+        glUniform3f(glGetUniformLocation(programId, "sl.direction"), 
+                            ctx->spotLightDirection.x,
+                            ctx->spotLightDirection.y, 
+                            ctx->spotLightDirection.z);
+
+        glUniform3f(glGetUniformLocation(programId, "sl.lightColor"), 
+                            ctx->spotLightColor.r, 
+                            ctx->spotLightColor.g,
+                            ctx->spotLightColor.b);
+
+        glUniform1f(glGetUniformLocation(programId, "sl.cutOff"), 
+                            ctx->spotLightCutOff);
+
+        glUniform1f(glGetUniformLocation(programId, "sl.constant"), 
+                            ctx->spotLightConstant);
+
+        glUniform1f(glGetUniformLocation(programId, "sl.linear"), 
+                            ctx->spotLightLinear);
+
+        glUniform1f(glGetUniformLocation(programId, "sl.quadratic"),
+                            ctx->spotLightQuardratic);
+
+        //======================================
 
         glDrawArrays(model->drawMode, 0, model->numVertex);
     }

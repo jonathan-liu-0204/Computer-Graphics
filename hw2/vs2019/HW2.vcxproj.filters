@@ -70,9 +70,6 @@
     <ClInclude Include="..\include\utils.h">
       <Filter>標頭檔</Filter>
     </ClInclude>
-    <ClInclude Include="..\include\camera.h">
-      <Filter>標頭檔</Filter>
-    </ClInclude>
     <ClInclude Include="..\extern\glm\glm\glm.hpp">
       <Filter>標頭檔\glm</Filter>
     </ClInclude>
@@ -89,6 +86,9 @@
       <Filter>標頭檔</Filter>
     </ClInclude>
     <ClInclude Include="..\include\context.h">
+      <Filter>標頭檔</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\camera.h">
       <Filter>標頭檔</Filter>
     </ClInclude>
   </ItemGroup>
