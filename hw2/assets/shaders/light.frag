@@ -73,31 +73,62 @@ vec4 CalcPointLight(){
     vec3 norm = normalize(Normal);
     vec3 lightDir = normalize(pl.position - FragPos);
     vec3 viewDir = normalize(viewPos - FragPos);
-
     vec3 reflectDir = reflect(-lightDir, norm);
+    
     float diff = max(dot(norm, lightDir), 0.0);
     float spec = pow(max(dot(viewDir, reflectDir), 0.0), material.shininess);
 
-    float distance    = length(pl.position - FragPos);
+    float distance = length(pl.position - FragPos);
     float attenuation = 1.0 / (pl.constant + pl.linear * distance + pl.quadratic * (distance * distance));  
                  
     vec4 ambient  = vec4(pl.lightColor * material.ambient, 1.0)  * texture(ourTexture, TexCoord);
     vec4 diffuse  = vec4(pl.lightColor * material.diffuse * diff, 1.0) * texture(ourTexture, TexCoord);
     vec4 specular = vec4(pl.lightColor * material.specular * spec, 1.0) * texture(ourTexture, TexCoord);
 
-    ambient  *= attenuation;
     diffuse  *= attenuation;
     specular *= attenuation;
 
     return (ambient + diffuse + specular);
 }
 
+vec4 CalcSpotLight(){
+
+    vec3 norm = normalize(Normal);
+    vec3 lightDir = normalize(sl.position - FragPos);
+    vec3 viewDir = normalize(viewPos - FragPos);
+    vec3 reflectDir = reflect(-lightDir, norm);
+
+    float diff = max(dot(norm, lightDir), 0.0);
+    float spec = pow(max(dot(viewDir, reflectDir), 0.0), material.shininess);
+
+    float distance = length(sl.position - FragPos);
+    float attenuation = 1.0 / (sl.constant + sl.linear * distance + sl.quadratic * (distance * distance));    
+
+    float theta = dot(lightDir, normalize(-sl.direction)); 
+    // float epsilon = sl.cutOff - 3.14 + sl.cutOff;
+    // float intensity = clamp((theta - 3.14 + sl.cutOff) / epsilon, 0.0, 1.0);
+
+    vec4 ambient = vec4(sl.lightColor * material.ambient, 1.0) * texture(ourTexture, TexCoord);
+    vec4 diffuse = vec4(sl.lightColor * material.diffuse * diff, 1.0) * texture(ourTexture, TexCoord);
+    vec4 specular = vec4(sl.lightColor * material.specular * spec, 1.0) * texture(ourTexture, TexCoord);
+
+    //ambient *=  intensity;
+    // diffuse *= attenuation * intensity;
+    // specular *= attenuation * intensity;
+    diffuse *= attenuation;
+    specular *= attenuation;
+
+    if(theta > sl.cutOff){
+        return (ambient + diffuse + specular);
+    }
+    else{
+        return vec4(sl.lightColor * material.ambient, 1.0) * texture(ourTexture, TexCoord);
+    }
+}
 
 void main() {
     color = vec4(0.0, 0.0, 0.0, 1.0);
     //color =  texture2D(ourTexture, TexCoord) * vec4((material.ambient + material.diffuse + material.specular), 1.0);
-
-    vec3 viewDir = normalize(viewPos - FragPos);
 
     if(dl.enable == 1){
         color += CalcDirLight();
@@ -105,5 +136,13 @@ void main() {
 
     if(pl.enable == 1){
         color += CalcPointLight();
+    }
+
+    if(sl.enable == 1){
+        color += CalcSpotLight();
+    }
+
+    if(dl.enable == 0 && pl.enable == 0 && sl.enable == 0){
+        color = vec4(material.ambient, 1.0) * texture(ourTexture, TexCoord);
     }
 }
