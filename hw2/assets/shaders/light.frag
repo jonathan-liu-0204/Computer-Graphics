@@ -55,7 +55,6 @@ vec4 CalcDirLight(){
     vec3 norm = normalize(Normal);
     vec3 viewDir = normalize(viewPos - FragPos);
     vec3 lightDir = normalize(-dl.direction);
-
     vec3 reflectDir = reflect(-lightDir, norm);
 
     float diff = max(dot(norm, lightDir), 0.0);
@@ -105,16 +104,11 @@ vec4 CalcSpotLight(){
     float attenuation = 1.0 / (sl.constant + sl.linear * distance + sl.quadratic * (distance * distance));    
 
     float theta = dot(lightDir, normalize(-sl.direction)); 
-    // float epsilon = sl.cutOff - 3.14 + sl.cutOff;
-    // float intensity = clamp((theta - 3.14 + sl.cutOff) / epsilon, 0.0, 1.0);
 
     vec4 ambient = vec4(sl.lightColor * material.ambient, 1.0) * texture(ourTexture, TexCoord);
     vec4 diffuse = vec4(sl.lightColor * material.diffuse * diff, 1.0) * texture(ourTexture, TexCoord);
     vec4 specular = vec4(sl.lightColor * material.specular * spec, 1.0) * texture(ourTexture, TexCoord);
 
-    //ambient *=  intensity;
-    // diffuse *= attenuation * intensity;
-    // specular *= attenuation * intensity;
     diffuse *= attenuation;
     specular *= attenuation;
 
@@ -128,7 +122,6 @@ vec4 CalcSpotLight(){
 
 void main() {
     color = vec4(0.0, 0.0, 0.0, 1.0);
-    //color =  texture2D(ourTexture, TexCoord) * vec4((material.ambient + material.diffuse + material.specular), 1.0);
 
     if(dl.enable == 1){
         color += CalcDirLight();

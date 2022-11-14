@@ -51,10 +51,6 @@ Model* Model::fromObjectFile(const char* obj_file) {
 	tmp_normals.push_back(temp_vec3);
 	tmp_textcoords.push_back(temp_vec2);
 
-	// std::vector<GLint> vertex_position_indicies;
-	// std::vector<GLint> vertex_texcoord_indicies;
-	// std::vector<GLint> vertex_normal_indicies;
-
 	int tmp_vertexnums = 0;
 	int total = 0;
 
@@ -81,25 +77,21 @@ Model* Model::fromObjectFile(const char* obj_file) {
 			total++;
 			int counter = 0;
 			while (ss >> temp_glint) {
-				// Pushing indices into correct arrays
 				if (counter == 0){
 					m->positions.push_back(tmp_positions[temp_glint].x);
 					m->positions.push_back(tmp_positions[temp_glint].y);
 					m->positions.push_back(tmp_positions[temp_glint].z);
 				}
 				else if (counter == 1){
-					//vertex_texcoord_indicies.push_back(temp_glint);
 					m->texcoords.push_back(tmp_textcoords[temp_glint].x);
 					m->texcoords.push_back(tmp_textcoords[temp_glint].y);
 				}
 				else if (counter == 2){
-					//vertex_normal_indicies.push_back(temp_glint);
 					m->normals.push_back(tmp_normals[temp_glint].x);
 					m->normals.push_back(tmp_normals[temp_glint].y);
 					m->normals.push_back(tmp_normals[temp_glint].z);
 				}
 
-				// Handling characters
 				if (ss.peek() == '/') {
 					++counter;
 					ss.ignore(1, '/');
@@ -109,7 +101,6 @@ Model* Model::fromObjectFile(const char* obj_file) {
 					ss.ignore(1, ' ');
 				}
 
-				// Reset the counter
 				if (counter > 2) counter = 0;
 			}
 		}
