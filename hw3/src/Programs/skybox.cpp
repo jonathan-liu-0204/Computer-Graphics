@@ -19,5 +19,17 @@ void SkyboxProgram::doMainLoop() {
    *            view matrix to do some modification before pass to shader            
    */
 
+  glBindVertexArray(model->vao);
+
+  const float* p = ctx->camera->getProjectionMatrix();
+  GLint pmatLoc = glGetUniformLocation(programId, "Projection");
+  glUniformMatrix4fv(pmatLoc, 1, GL_FALSE, p);
+
+  const float* v = ctx->camera->getViewMatrix();
+  GLint vmatLoc = glGetUniformLocation(programId, "ViewMatrix");
+  glUniformMatrix4fv(vmatLoc, 1, GL_FALSE, v);
+
+   // pass skybox shader to shader
+
   glUseProgram(0);
 }

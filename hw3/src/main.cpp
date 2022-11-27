@@ -39,7 +39,7 @@ void loadPrograms() {
   // fp = new FilterProgram(&ctx);
   // ctx.programs.push_back(new ShadowProgram(&ctx));
   // ctx.programs.push_back(new FilterProgramBindFrameAdapter(&ctx, fp));
-  // ctx.programs.push_back(new SkyboxProgram(&ctx));
+  ctx.programs.push_back(new SkyboxProgram(&ctx));
   ctx.programs.push_back(new LightProgram(&ctx));
   // ctx.programs.push_back(new ShadowLightProgram(&ctx));
   // ctx.programs.push_back(fp);
@@ -95,6 +95,18 @@ void loadModels() {
    *         5. put model to ctx.models
    * 
    */
+
+  m = new Model();
+
+  for (int i = 0; i < 6; i++) {
+    for (int j = i * 18; j < i * 18 + 18; j++) {
+      m->positions.push_back(skyboxVertices[j]);
+    } 
+  }
+  m->textures.push_back(createCubemap(blueSkyboxfaces));
+  attachSkyboxVAO(m);
+  m->numVertex = 6;
+  ctx.models.push_back(m);
 }
 
 void setupObjects() {
@@ -114,7 +126,7 @@ void setupObjects() {
   /* TODO#1-1: Uncomment to create skybox Object
    * Note:     Skybox object is put in Context::skybox rather than Context::objects 
    */
-  // ctx.skybox = new Object(3, glm::translate(glm::identity<glm::mat4>(), glm::vec3(0, 0, 0)));
+   ctx.skybox = new Object(3, glm::translate(glm::identity<glm::mat4>(), glm::vec3(0, 0, 0)));
 }
 
 int main() {
