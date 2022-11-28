@@ -31,9 +31,8 @@ void SkyboxProgram::doMainLoop() {
 
   glDepthMask(GL_FALSE);
   glActiveTexture(GL_TEXTURE0);
-  glUniform1i(glGetUniformLocation(programId, "skybox"), 0);
   glBindTexture(GL_TEXTURE_CUBE_MAP, model->textures[ctx->skybox->textureIndex]);
-  
+  glUniform1i(glGetUniformLocation(programId, "skybox"), 0);
   glDrawArrays(GL_TRIANGLES, 0, 36);
   glDepthMask(GL_TRUE);
 

@@ -14,5 +14,6 @@ uniform mat4 ViewMatrix;
 void main()
 {
 	TexCoord = position;
-	gl_Position = Projection * ViewMatrix * vec4(position, 1.0);
+	mat4 view = mat4(mat3(ViewMatrix));
+	gl_Position = Projection * view * vec4(position, 1.0);
 }

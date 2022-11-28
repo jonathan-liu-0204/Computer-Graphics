@@ -34,7 +34,7 @@ ShadowProgram::ShadowProgram(Context* ctx) : Program(ctx) {
    *          - glDrawBuffer
    *          - glReadBuffer
    */
-
+  /*
     // Our ids
     GLuint depthMapFBO;
     GLuint texDepthBuffer;
@@ -64,6 +64,7 @@ ShadowProgram::ShadowProgram(Context* ctx) : Program(ctx) {
     if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE) {
     std::printf("Error building Framebuffer!\n");
     }
+    */
 }
 
 void ShadowProgram::doMainLoop() {
@@ -84,6 +85,7 @@ void ShadowProgram::doMainLoop() {
    *              (the near plane, far plane value is provided, the image size is [-10~10], [-10~10]
    */
 
+  /*
   // 1. first render to depth map
   glViewport(0, 0, SHADOW_MAP_SIZE, SHADOW_MAP_SIZE);
   glBindFramebuffer(GL_FRAMEBUFFER, depthMapFBO);
@@ -99,6 +101,6 @@ void ShadowProgram::doMainLoop() {
   glBindTexture(GL_TEXTURE_2D, depthMap);
   RenderScene();
 
-
+  */
   glUseProgram(0);
 }

@@ -37,7 +37,7 @@ void loadPrograms() {
    *     - FilterProgramBindFrameAdapter is used to change render buffer for skybox and light program
    */
   // fp = new FilterProgram(&ctx);
-  ctx.programs.push_back(new ShadowProgram(&ctx));
+  //ctx.programs.push_back(new ShadowProgram(&ctx));
   // ctx.programs.push_back(new FilterProgramBindFrameAdapter(&ctx, fp));
   ctx.programs.push_back(new SkyboxProgram(&ctx));
   ctx.programs.push_back(new LightProgram(&ctx));
@@ -104,11 +104,12 @@ void loadModels() {
 
   m->textures.push_back(createCubemap(blueSkyboxfaces));
 
+  m->numVertex = 6;
+  m->drawMode = GL_QUADS;
   attachSkyboxVAO(m);
-  m->numVertex = 36;
   ctx.models.push_back(m);
 
-  std::cout << "m->textures: " << m->textures.data() << std::endl;
+  //std::cout << "m->textures: " << m->textures.data() << std::endl;
 }
 
 void setupObjects() {
