@@ -34,7 +34,7 @@ ShadowProgram::ShadowProgram(Context* ctx) : Program(ctx) {
    *          - glDrawBuffer
    *          - glReadBuffer
    */
-  /*
+  
     // Our ids
     GLuint depthMapFBO;
     GLuint texDepthBuffer;
@@ -48,8 +48,7 @@ ShadowProgram::ShadowProgram(Context* ctx) : Program(ctx) {
     glBindTexture(GL_TEXTURE_2D, texDepthBuffer);
 
     // set it up as simply a depth component
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT, SHADOW_MAP_SIZE, SHADOW_MAP_SIZE, 0, GL_DEPTH_COMPONENT,
-                 GL_FLOAT, NULL);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT, SHADOW_MAP_SIZE, SHADOW_MAP_SIZE, 0, GL_DEPTH_COMPONENT, GL_FLOAT, NULL);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
@@ -60,11 +59,12 @@ ShadowProgram::ShadowProgram(Context* ctx) : Program(ctx) {
     glDrawBuffer(GL_NONE);
     glReadBuffer(GL_NONE);
 
+    glBindFramebuffer(GL_FRAMEBUFFER, 0);  
+
     // check if it is correct
     if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE) {
-    std::printf("Error building Framebuffer!\n");
+        std::printf("Error building Framebuffer!\n");
     }
-    */
 }
 
 void ShadowProgram::doMainLoop() {
@@ -85,22 +85,10 @@ void ShadowProgram::doMainLoop() {
    *              (the near plane, far plane value is provided, the image size is [-10~10], [-10~10]
    */
 
-  /*
-  // 1. first render to depth map
   glViewport(0, 0, SHADOW_MAP_SIZE, SHADOW_MAP_SIZE);
   glBindFramebuffer(GL_FRAMEBUFFER, depthMapFBO);
-  glClear(GL_DEPTH_BUFFER_BIT);
-  RenderScene(simpleDepthShader);
-  ConfigureShaderAndMatrices();
-  RenderScene();
-  glBindFramebuffer(GL_FRAMEBUFFER, 0);
-  // 2. then render scene as normal with shadow mapping (using depth map)
-  glViewport(0, 0, SCR_WIDTH, SCR_HEIGHT);
-  glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-  ConfigureShaderAndMatrices();
-  glBindTexture(GL_TEXTURE_2D, depthMap);
-  RenderScene();
 
-  */
+     
+
   glUseProgram(0);
 }
