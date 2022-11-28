@@ -35,7 +35,35 @@ ShadowProgram::ShadowProgram(Context* ctx) : Program(ctx) {
    *          - glReadBuffer
    */
 
+    // Our ids
+    GLuint depthMapFBO;
+    GLuint texDepthBuffer;
 
+    // bind framebuffer
+    glGenFramebuffers(1, &depthMapFBO);
+    glBindFramebuffer(GL_FRAMEBUFFER, depthMapFBO);
+
+    // create the texture
+    glGenTextures(1, &texDepthBuffer);
+    glBindTexture(GL_TEXTURE_2D, texDepthBuffer);
+
+    // set it up as simply a depth component
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT, SHADOW_MAP_SIZE, SHADOW_MAP_SIZE, 0, GL_DEPTH_COMPONENT,
+                 GL_FLOAT, NULL);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, texDepthBuffer, 0);
+
+    // framebuffer by default needs at least a color component, but we wont use it, so we need to state that
+    glDrawBuffer(GL_NONE);
+    glReadBuffer(GL_NONE);
+
+    // check if it is correct
+    if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE) {
+    std::printf("Error building Framebuffer!\n");
+    }
 }
 
 void ShadowProgram::doMainLoop() {
@@ -55,6 +83,21 @@ void ShadowProgram::doMainLoop() {
    *           2. For the direction light we need orthogonal projection rather than perspective projection
    *              (the near plane, far plane value is provided, the image size is [-10~10], [-10~10]
    */
+
+  // 1. first render to depth map
+  glViewport(0, 0, SHADOW_MAP_SIZE, SHADOW_MAP_SIZE);
+  glBindFramebuffer(GL_FRAMEBUFFER, depthMapFBO);
+  glClear(GL_DEPTH_BUFFER_BIT);
+  RenderScene(simpleDepthShader);
+  ConfigureShaderAndMatrices();
+  RenderScene();
+  glBindFramebuffer(GL_FRAMEBUFFER, 0);
+  // 2. then render scene as normal with shadow mapping (using depth map)
+  glViewport(0, 0, SCR_WIDTH, SCR_HEIGHT);
+  glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+  ConfigureShaderAndMatrices();
+  glBindTexture(GL_TEXTURE_2D, depthMap);
+  RenderScene();
 
 
   glUseProgram(0);

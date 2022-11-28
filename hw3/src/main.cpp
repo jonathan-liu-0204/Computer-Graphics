@@ -37,11 +37,11 @@ void loadPrograms() {
    *     - FilterProgramBindFrameAdapter is used to change render buffer for skybox and light program
    */
   // fp = new FilterProgram(&ctx);
-  // ctx.programs.push_back(new ShadowProgram(&ctx));
+  ctx.programs.push_back(new ShadowProgram(&ctx));
   // ctx.programs.push_back(new FilterProgramBindFrameAdapter(&ctx, fp));
   ctx.programs.push_back(new SkyboxProgram(&ctx));
   ctx.programs.push_back(new LightProgram(&ctx));
-  // ctx.programs.push_back(new ShadowLightProgram(&ctx));
+  //ctx.programs.push_back(new ShadowLightProgram(&ctx));
   // ctx.programs.push_back(fp);
 
   // TODO#0: You can trace light program before doing hw to know how this template work and difference from hw2
@@ -98,15 +98,17 @@ void loadModels() {
 
   m = new Model();
 
-  for (int i = 0; i < 6; i++) {
-    for (int j = i * 18; j < i * 18 + 18; j++) {
-      m->positions.push_back(skyboxVertices[j]);
-    } 
+  for (int i = 0; i < 108;  i++) {
+    m->positions.push_back(skyboxVertices[i]);
   }
+
   m->textures.push_back(createCubemap(blueSkyboxfaces));
+
   attachSkyboxVAO(m);
-  m->numVertex = 6;
+  m->numVertex = 36;
   ctx.models.push_back(m);
+
+  std::cout << "m->textures: " << m->textures.data() << std::endl;
 }
 
 void setupObjects() {

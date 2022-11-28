@@ -29,7 +29,13 @@ void SkyboxProgram::doMainLoop() {
   GLint vmatLoc = glGetUniformLocation(programId, "ViewMatrix");
   glUniformMatrix4fv(vmatLoc, 1, GL_FALSE, v);
 
-   // pass skybox shader to shader
+  glDepthMask(GL_FALSE);
+  glActiveTexture(GL_TEXTURE0);
+  glUniform1i(glGetUniformLocation(programId, "skybox"), 0);
+  glBindTexture(GL_TEXTURE_CUBE_MAP, model->textures[ctx->skybox->textureIndex]);
+  
+  glDrawArrays(GL_TRIANGLES, 0, 36);
+  glDepthMask(GL_TRUE);
 
   glUseProgram(0);
 }
