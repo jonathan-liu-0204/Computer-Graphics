@@ -41,7 +41,7 @@ void loadPrograms() {
   // ctx.programs.push_back(new FilterProgramBindFrameAdapter(&ctx, fp));
   ctx.programs.push_back(new SkyboxProgram(&ctx));
   ctx.programs.push_back(new LightProgram(&ctx));
-  ctx.programs.push_back(new ShadowLightProgram(&ctx));
+  //ctx.programs.push_back(new ShadowLightProgram(&ctx));
   // ctx.programs.push_back(fp);
 
   // TODO#0: You can trace light program before doing hw to know how this template work and difference from hw2
