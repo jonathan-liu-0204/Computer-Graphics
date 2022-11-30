@@ -12,6 +12,8 @@ void ShadowLightProgram::doMainLoop() {
    */ 
 
   int obj_num = (int)ctx->objects.size();
+  float near_plane = 1.0f;
+  float far_plane = 7.5f;
 
   for (int i = 0; i < obj_num; i++) {
     int modelIndex = ctx->objects[i]->modelIndex;
@@ -32,8 +34,23 @@ void ShadowLightProgram::doMainLoop() {
 
     glm::mat4 TIMatrix = glm::transpose(glm::inverse(model->modelMatrix));
     const float* ti = glm::value_ptr(TIMatrix);
-    mmatLoc = glGetUniformLocation(programId, "TIModelMatrix");
-    glUniformMatrix4fv(mmatLoc, 1, GL_FALSE, ti);
+    GLint tlmmatLoc = glGetUniformLocation(programId, "TIModelMatrix");
+    glUniformMatrix4fv(tlmmatLoc, 1, GL_FALSE, ti);
+
+    glm::mat4 light_pos = glm::lookAt(ctx->lightDirection * (-10.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+    glm::mat4 light_project = glm::ortho(-10.0f, 10.0f, -10.0f, 10.0f, near_plane, far_plane);
+    glm::mat4 LightViewMatrix = light_project * light_pos;
+
+    const float* lvm = glm::value_ptr(LightViewMatrix);
+    GLint lvmmatLoc = glGetUniformLocation(programId, "LightViewMatrix");
+    glUniformMatrix4fv(lvmmatLoc, 1, GL_FALSE, lvm);
+
+    const float* flp = glm::value_ptr(light_pos);
+    GLint flpmatLoc = glGetUniformLocation(programId, "fakeLightPos");
+    glUniformMatrix4fv(flpmatLoc, 1, GL_FALSE, flp);
+
+    GLint eable_shadowLoc = glGetUniformLocation(programId, "enableShadow");
+    glUniform1i(eable_shadowLoc, ctx->enableShadow);
 
     const float* vp = ctx->camera->getPosition();
     mmatLoc = glGetUniformLocation(programId, "viewPos");
@@ -44,11 +61,14 @@ void ShadowLightProgram::doMainLoop() {
     glUniform3fv(glGetUniformLocation(programId, "dl.diffuse"), 1, glm::value_ptr(ctx->lightDiffuse));
     glUniform3fv(glGetUniformLocation(programId, "dl.specular"), 1, glm::value_ptr(ctx->lightSpecular));
 
-
-
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D, model->textures[ctx->objects[i]->textureIndex]);
     glUniform1i(glGetUniformLocation(programId, "ourTexture"), 0);
+
+    glActiveTexture(GL_TEXTURE1);
+    glBindTexture(GL_TEXTURE_2D, ctx->shadowMapTexture);
+    glUniform1i(glGetUniformLocation(programId, "shadowMap"), 1);
+
     glDrawArrays(model->drawMode, 0, model->numVertex);
   }
 
