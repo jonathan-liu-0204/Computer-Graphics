@@ -32,7 +32,7 @@ out vec4 LightFragPost;
 
 void main() {
 	TexCoord = texCoord;
-	Normal = vec3(TIModelMatrix * vec4(normal, 1.0));
+	Normal = mat3(TIModelMatrix) * normal;
 	FragPos = vec3(ModelMatrix * vec4(position, 1.0));
 	LightFragPost = LightViewMatrix * vec4(FragPos, 1.0);
 	gl_Position = Projection * ViewMatrix * vec4(FragPos, 1.0);

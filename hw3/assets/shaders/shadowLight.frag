@@ -13,7 +13,7 @@ uniform sampler2D ourTexture;
 uniform sampler2D shadowMap;
 
 uniform vec3 viewPos;
-uniform vec3 fakeLightPos;
+// uniform vec3 fakeLightPos;
 
 uniform int enableShadow;
 
@@ -33,16 +33,22 @@ float ShadowCalculation(){
     vec3 projCoords = LightFragPost.xyz / LightFragPost.w;
     projCoords = projCoords * 0.5 + 0.5;
 
-    float closestDepth = texture(shadowMap, projCoords.xy).r; 
+    float closestDepth = texture(shadowMap, projCoords.xy).x;
+
     float currentDepth = projCoords.z;
-    float shadow = (currentDepth - bias) > closestDepth  ? 1.0 : 0.0;
+
+    if(currentDepth - bias > 1.0){
+        return 0;
+    }
+
+    float shadow = currentDepth - bias > closestDepth  ? 1.0 : 0.0;
 
     return shadow;
 }
 
 void main() {
     vec3 ambient = dl.ambient;
-  	
+
     // Diffuse 
     vec3 norm = normalize(Normal);
     vec3 lightDir = normalize(-dl.direction);  

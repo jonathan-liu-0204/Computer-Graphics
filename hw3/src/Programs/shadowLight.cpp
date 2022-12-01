@@ -37,17 +37,24 @@ void ShadowLightProgram::doMainLoop() {
     GLint tlmmatLoc = glGetUniformLocation(programId, "TIModelMatrix");
     glUniformMatrix4fv(tlmmatLoc, 1, GL_FALSE, ti);
 
-    glm::mat4 light_pos = glm::lookAt(ctx->lightDirection * (-10.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
-    glm::mat4 light_project = glm::ortho(-10.0f, 10.0f, -10.0f, 10.0f, near_plane, far_plane);
-    glm::mat4 LightViewMatrix = light_project * light_pos;
+   glm::mat4 lightProjection = glm::ortho(-10.0f, 10.0f, -10.0f, 10.0f, near_plane, far_plane);
+    glm::mat4 lightView = glm::lookAt(normalize(-ctx->lightDirection) * -10.0f, 
+                                        glm ::vec3(1.0f, 0.0f, 0.0f), 
+                                        glm::vec3(0.0f, 1.0f, 0.0f));
+    // glm::mat4 lightView = glm::lookAt(normalize(-ctx->lightDirection) * -10.0f, (normalize(-ctx->lightDirection) *
+    // -10.0f) + normalize(-ctx->lightDirection), glm::vec3(0.0f, 1.0f, 0.0f));
+    glm::mat4 LightViewMatrix = lightProjection * lightView;
 
     const float* lvm = glm::value_ptr(LightViewMatrix);
     GLint lvmmatLoc = glGetUniformLocation(programId, "LightViewMatrix");
     glUniformMatrix4fv(lvmmatLoc, 1, GL_FALSE, lvm);
-
-    const float* flp = glm::value_ptr(light_pos);
+    
+    /*
+    const float* flp = glm::value_ptr(lightView);
     GLint flpmatLoc = glGetUniformLocation(programId, "fakeLightPos");
     glUniformMatrix4fv(flpmatLoc, 1, GL_FALSE, flp);
+    //glUniform3f(flpmatLoc, ctx->lightDirection.x, ctx->lightDirection.y, ctx->lightDirection.);
+    */
 
     GLint eable_shadowLoc = glGetUniformLocation(programId, "enableShadow");
     glUniform1i(eable_shadowLoc, ctx->enableShadow);

@@ -1,17 +1,1 @@
-﻿  context.c
-  egl_context.c
-  init.c
-  input.c
-  monitor.c
-  osmesa_context.c
-  vulkan.c
-  wgl_context.c
-  win32_init.c
-  win32_joystick.c
-  win32_monitor.c
-  win32_thread.c
-  win32_time.c
-  win32_window.c
-  window.c
-     正在建立程式庫 C:\Users\jonat\Desktop\Computer-Graphics\hw3\vs2019\..\lib\glfw3dll.lib 和物件 C:\Users\jonat\Desktop\Computer-Graphics\hw3\vs2019\..\lib\glfw3dll.exp
-  glfw.vcxproj -> C:\Users\jonat\Desktop\Computer-Graphics\hw3\bin\glfw3.dll
+﻿  glfw.vcxproj -> C:\Users\Jonathan Liu\Desktop\Computer-Graphics\hw3\bin\glfw3.dll
