@@ -29,19 +29,19 @@ uniform DirectionLight dl;
 float ShadowCalculation(){
     float bias = 0.002;
     // TODO
-
+    
     vec3 projCoords = LightFragPost.xyz / LightFragPost.w;
     projCoords = projCoords * 0.5 + 0.5;
 
-    float closestDepth = texture(shadowMap, projCoords.xy).x;
+    float closestDepth = texture(shadowMap, projCoords.xy).r;
 
     float currentDepth = projCoords.z;
 
-    if(currentDepth - bias > 1.0){
-        return 0;
-    }
+    float shadow = currentDepth > closestDepth  ? 1.0 : 0.0;
 
-    float shadow = currentDepth - bias > closestDepth  ? 1.0 : 0.0;
+    if(projCoords.z > 1.0){
+        shadow = 0.0;
+    }
 
     return shadow;
 }

@@ -35,30 +35,28 @@ ShadowProgram::ShadowProgram(Context* ctx) : Program(ctx) {
    *          - glReadBuffer
    */
   
-    GLuint depthMapFBO = 0;
-    glGenFramebuffers(1, &depthMapFBO);
-    glBindFramebuffer(GL_FRAMEBUFFER, depthMapFBO);
+  GLuint depthMapFBO;
+  glGenFramebuffers(1, &depthMapFBO);
 
-    GLuint depthMap;
-    glGenTextures(1, &depthMap);
-    glBindTexture(GL_TEXTURE_2D, depthMap);
+  //Generate Depth Map Texture
+  glGenTextures(1, &(ctx->shadowMapTexture));
 
-    ctx->shadowMapTexture = depthMap;
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT, SHADOW_MAP_SIZE, SHADOW_MAP_SIZE, 0, GL_DEPTH_COMPONENT, GL_FLOAT, NULL);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_BORDER);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_BORDER);
-    glTexParameterfv(GL_TEXTURE_2D, GL_TEXTURE_BORDER_COLOR, borderColor);
+  glBindTexture(GL_TEXTURE_2D, (ctx->shadowMapTexture));
 
-    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, depthMap, 0);
-    glDrawBuffer(GL_NONE);
-    glReadBuffer(GL_NONE);
-    glBindFramebuffer(GL_FRAMEBUFFER, 0);
+  glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT, SHADOW_MAP_SIZE, SHADOW_MAP_SIZE, 0, GL_DEPTH_COMPONENT, GL_FLOAT, NULL);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_BORDER);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_BORDER);
+  glTexParameterfv(GL_TEXTURE_2D, GL_TEXTURE_BORDER_COLOR, borderColor);
 
-    if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE) {
-        std::printf("Error building Framebuffer!\n");
-    }
+  glBindFramebuffer(GL_FRAMEBUFFER, depthMapFBO);
+  glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, ctx->shadowMapTexture, 0);
+
+  glDrawBuffer(GL_NONE);
+  glReadBuffer(GL_NONE);
+
+  glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
 
 void ShadowProgram::doMainLoop() {
@@ -79,42 +77,34 @@ void ShadowProgram::doMainLoop() {
    *              (the near plane, far plane value is provided, the image size is [-10~10], [-10~10]
    */
 
+  glViewport(0, 0, OpenGLContext::getWidth(), OpenGLContext::getHeight());
+  glBindFramebuffer(GL_FRAMEBUFFER, depthMapFBO);
+
   int obj_num = (int)ctx->objects.size();
-
-  float near_plane = 1.0f;
-  float far_plane = 7.5f;
-
   for (int i = 0; i < obj_num; i++) {
-
-    glViewport(0, 0, OpenGLContext::getWidth(), OpenGLContext::getHeight());
-    // glBindTexture(GL_TEXTURE_2D, ctx->shadowMapTexture);
-    glBindFramebuffer(GL_FRAMEBUFFER, depthMapFBO);
-
     int modelIndex = ctx->objects[i]->modelIndex;
     Model* model = ctx->models[modelIndex];
-    
-    // glBindVertexArray(model->vao);
+    glBindVertexArray(model->vao);
+
+    float near_plane = 1.0f;
+    float far_plane = 7.5f;
 
     glm::mat4 lightProjection = glm::ortho(-10.0f, 10.0f, -10.0f, 10.0f, near_plane, far_plane);
-    glm::mat4 lightView = glm::lookAt(normalize(-ctx->lightDirection) * -10.0f, 
-                                        glm ::vec3(1.0f, 0.0f, 0.0f),
-                                        glm::vec3(0.0f, 1.0f, 0.0f));
-    // glm::mat4 lightView = glm::lookAt(normalize(-ctx->lightDirection) * -10.0f, (normalize(-ctx->lightDirection) *
-    // -10.0f) + normalize(-ctx->lightDirection), glm::vec3(0.0f, 1.0f, 0.0f));
-    glm::mat4 LightViewMatrix = lightProjection * lightView;
-
+    glm::mat4 lightView = glm::lookAt(-ctx->lightDirection * -10.0f, glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+    glm::mat4 LightViewMatrix = lightProjection * lightView; 
     const float* lvm = glm::value_ptr(LightViewMatrix);
-    GLint lvmmatLoc = glGetUniformLocation(programId, "LightViewMatrix");
-    glUniformMatrix4fv(lvmmatLoc, 1, GL_FALSE, lvm);
+    GLint lvmatLoc = glGetUniformLocation(programId, "LightViewMatrix");
+    glUniformMatrix4fv(lvmatLoc, 1, GL_FALSE, lvm);
 
     const float* m = glm::value_ptr(ctx->objects[i]->transformMatrix * model->modelMatrix);
     GLint mmatLoc = glGetUniformLocation(programId, "ModelMatrix");
     glUniformMatrix4fv(mmatLoc, 1, GL_FALSE, m);
 
-    glViewport(0, 0, OpenGLContext::getWidth(), OpenGLContext::getHeight());
-    // glBindTexture(GL_TEXTURE_2D, ctx->shadowMapTexture);
-    glBindFramebuffer(GL_FRAMEBUFFER, 0);
+    glDrawArrays(model->drawMode, 0, model->numVertex);
   }
 
+  glViewport(0, 0, OpenGLContext::getWidth(), OpenGLContext::getHeight());
+  glBindFramebuffer(GL_FRAMEBUFFER, 0);
+  
   glUseProgram(0);
 }
