@@ -36,13 +36,13 @@ void loadPrograms() {
    *   FilterProgramBindFrameAdapter, FilterProgram for TODO#3
    *     - FilterProgramBindFrameAdapter is used to change render buffer for skybox and light program
    */
-  // fp = new FilterProgram(&ctx);
+  fp = new FilterProgram(&ctx);
   ctx.programs.push_back(new ShadowProgram(&ctx));
-  // ctx.programs.push_back(new FilterProgramBindFrameAdapter(&ctx, fp));
+  ctx.programs.push_back(new FilterProgramBindFrameAdapter(&ctx, fp));
   ctx.programs.push_back(new SkyboxProgram(&ctx));
   ctx.programs.push_back(new LightProgram(&ctx));
   ctx.programs.push_back(new ShadowLightProgram(&ctx));
-  // ctx.programs.push_back(fp);
+  ctx.programs.push_back(fp);
 
   // TODO#0: You can trace light program before doing hw to know how this template work and difference from hw2
   for (auto iter = ctx.programs.begin(); iter != ctx.programs.end(); iter++) {
