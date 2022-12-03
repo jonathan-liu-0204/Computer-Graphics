@@ -10,7 +10,7 @@ FilterProgram::FilterProgram(Context *ctx) : Program(ctx) {
   // TODO#3-1: Generate Framebuffer and VAO/VBO for filter
   // Note:     You need to design proper position/texcoord data for filter program (NDC)
 
-
+  
   updateFrameBuffer(OpenGLContext::getWidth(), OpenGLContext::getHeight());
 }
 
@@ -26,7 +26,7 @@ void FilterProgram::updateFrameBuffer(int SCR_WIDTH, int SCR_HEIGHT) {
    * Hint:
    *           - glGenRenderbuffers
    *           - glBindRenderbuffer
-   *           - glRenderbufferStorage
+   *           - glRenderbufferStorage	
    *           - glBindFramebuffer
    *           - glFramebufferTexture2D
    *           - glFramebufferRenderbuffer

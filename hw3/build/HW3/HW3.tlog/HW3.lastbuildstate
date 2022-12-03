@@ -1,2 +1,2 @@
-PlatformToolSet=v143:VCToolArchitecture=Native32Bit:VCToolsVersion=14.33.31629:TargetPlatformVersion=10.0.19041.0:
-Debug|Win32|C:\Users\jonat\Desktop\Computer-Graphics\hw3\vs2019\|
+PlatformToolSet=v143:VCToolArchitecture=Native64Bit:VCToolsVersion=14.33.31629:TargetPlatformVersion=10.0.19041.0:
+Debug|x64|C:\Users\jonat\Desktop\Computer-Graphics\hw3\vs2019\|

@@ -236,7 +236,7 @@ void keyCallback(GLFWwindow* window, int key, int, int action, int) {
 
 void resizeCallback(GLFWwindow* window, int width, int height) {
   // TODO#3 uncomment this to update frame buffer size when window size chnage
-  // fp->updateFrameBuffer(width, height);
+  fp->updateFrameBuffer(width, height);
   OpenGLContext::framebufferResizeCallback(window, width, height);
   auto ptr = static_cast<Camera*>(glfwGetWindowUserPointer(window));
   if (ptr) {
