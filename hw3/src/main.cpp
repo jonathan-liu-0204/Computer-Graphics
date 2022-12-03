@@ -104,8 +104,8 @@ void loadModels() {
 
   m->textures.push_back(createCubemap(blueSkyboxfaces));
 
-  m->numVertex = 6;
-  m->drawMode = GL_QUADS;
+  m->numVertex = 108;
+  //m->drawMode = GL_QUADS;
   attachSkyboxVAO(m);
   ctx.models.push_back(m);
 

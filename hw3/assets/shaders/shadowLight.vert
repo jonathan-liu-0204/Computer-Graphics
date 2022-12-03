@@ -31,9 +31,9 @@ out vec4 LightFragPost;
 //           when its z coordinate is larger than 1.0, you should return 0
 
 void main() {
-	TexCoord = texCoord;
-	Normal = mat3(TIModelMatrix) * normal;
+	gl_Position = Projection * ViewMatrix * ModelMatrix * vec4(position, 1.0);
 	FragPos = vec3(ModelMatrix * vec4(position, 1.0));
+	Normal = mat3(TIModelMatrix) * normal;
+	TexCoord = texCoord;
 	LightFragPost = LightViewMatrix * vec4(FragPos, 1.0);
-	gl_Position = Projection * ViewMatrix * vec4(FragPos, 1.0);
 }

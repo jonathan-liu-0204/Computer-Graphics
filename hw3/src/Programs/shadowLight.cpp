@@ -39,27 +39,28 @@ void ShadowLightProgram::doMainLoop() {
     mmatLoc = glGetUniformLocation(programId, "viewPos");
     glUniform3f(mmatLoc, vp[0], vp[1], vp[2]);
 
-    glUniform3fv(glGetUniformLocation(programId, "dl.direction"), 1, glm::value_ptr(ctx->lightDirection));
-    glUniform3fv(glGetUniformLocation(programId, "dl.ambient"), 1, glm::value_ptr(ctx->lightAmbient));
-    glUniform3fv(glGetUniformLocation(programId, "dl.diffuse"), 1, glm::value_ptr(ctx->lightDiffuse));
-    glUniform3fv(glGetUniformLocation(programId, "dl.specular"), 1, glm::value_ptr(ctx->lightSpecular));
-
-    float near_plane = 1.0f;
-    float far_plane = 7.5f;
+    GLfloat near_plane = 1.0f;
+    GLfloat far_plane = 7.5f;
 
     glm::mat4 lightProjection = glm::ortho(-10.0f, 10.0f, -10.0f, 10.0f, near_plane, far_plane);
-    glm::mat4 lightView = glm::lookAt(-ctx->lightDirection * -10.0f, glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+    glm::vec3 fake_LightPos = ctx->lightDirection * -10.0f;
+    glm::mat4 lightView = glm::lookAt(fake_LightPos, glm::vec3(0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
     glm::mat4 LightViewMatrix = lightProjection * lightView;
+
     const float* lvm = glm::value_ptr(LightViewMatrix);
-    GLint lvmatLoc = glGetUniformLocation(programId, "LightViewMatrix");
-    glUniformMatrix4fv(lvmatLoc, 1, GL_FALSE, lvm);
+    mmatLoc = glGetUniformLocation(programId, "LightViewMatrix");
+    glUniformMatrix4fv(mmatLoc, 1, GL_FALSE, lvm);
 
     GLint eable_shadowLoc = glGetUniformLocation(programId, "enableShadow");
     glUniform1i(eable_shadowLoc, ctx->enableShadow);
 
-    // const float* flp = glm::value_ptr(-ctx->lightDirection * -10.0f);
-    // GLint fakeLightPosition_Loc = glGetUniformLocation(programId, "fakeLightPos");
-    // glUniform3fv(fakeLightPosition_Loc, 1, flp);
+    GLint fakeLightPosition_Loc = glGetUniformLocation(programId, "fakeLightPos");
+    glUniform3fv(fakeLightPosition_Loc, 1, glm::value_ptr(fake_LightPos));
+
+    glUniform3fv(glGetUniformLocation(programId, "dl.direction"), 1, glm::value_ptr(ctx->lightDirection));
+    glUniform3fv(glGetUniformLocation(programId, "dl.ambient"), 1, glm::value_ptr(ctx->lightAmbient));
+    glUniform3fv(glGetUniformLocation(programId, "dl.diffuse"), 1, glm::value_ptr(ctx->lightDiffuse));
+    glUniform3fv(glGetUniformLocation(programId, "dl.specular"), 1, glm::value_ptr(ctx->lightSpecular));
 
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D, model->textures[ctx->objects[i]->textureIndex]);

@@ -1,2 +1,12 @@
-﻿  shadowLight.cpp
-  HW3.vcxproj -> C:\Users\Jonathan Liu\Desktop\Computer-Graphics\hw3\bin\HW3.exe
+﻿  camera.cpp
+  gl_helper.cpp
+  model.cpp
+  opengl_context.cpp
+  main.cpp
+  filter.cpp
+  light.cpp
+  program.cpp
+  shadow.cpp
+  shadowLight.cpp
+  skybox.cpp
+  HW3.vcxproj -> C:\Users\jonat\Desktop\Computer-Graphics\hw3\bin\HW3.exe

@@ -136,7 +136,7 @@ GLuint createCubemap(char faces[6][30]) {
       stbi_image_free(data);
     } else {
       std::cout << "Cubemap tex failed to load at path: " << faces[i] << std::endl;
-      stbi_image_free(data);
+      // stbi_image_free(data);
     }
   }
 
