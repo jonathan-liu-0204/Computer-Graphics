@@ -1,3 +1,2 @@
 ﻿  filter.cpp
-C:\Program Files\Microsoft Visual Studio\2022\Community\MSBuild\Microsoft\VC\v170\Microsoft.CppCommon.targets(1094,5): error MSB6006: "link.exe" 以返回碼 1201 結束。
-LINK : fatal error LNK1201: 寫入程式資料庫 'C:\Users\jonat\Desktop\Computer-Graphics\hw3\bin\HW3.pdb' 時發生錯誤。請檢查磁碟空間是否足夠、路徑是否正確或是否有足夠的權限
+  HW3.vcxproj -> C:\Users\jonat\Desktop\Computer-Graphics\hw3\bin\HW3.exe
