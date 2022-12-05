@@ -51,7 +51,7 @@ float ShadowCalculation(){
     }
     shadow /= 25.0;
 
-    if(currentDepth > 1.0){
+    if(currentDepth - bias > 1.0){
         shadow = 0.0;
     }
 

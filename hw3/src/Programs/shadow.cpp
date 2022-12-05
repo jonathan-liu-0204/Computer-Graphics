@@ -10,7 +10,7 @@ ShadowProgram::ShadowProgram(Context* ctx) : Program(ctx) {
   fragProgramFIle = "../assets/shaders/shadow.frag";
 
   // TODO#2-0: comment this line if your computer is poor
-  //glGetIntegerv(GL_MAX_TEXTURE_SIZE, &SHADOW_MAP_SIZE);
+  glGetIntegerv(GL_MAX_TEXTURE_SIZE, &SHADOW_MAP_SIZE);
   std::cout << "Current depth map size is " << SHADOW_MAP_SIZE << std::endl;
 
   /* TODO#2-1 Generate frame buffer and depth map for shadow program
@@ -35,14 +35,11 @@ ShadowProgram::ShadowProgram(Context* ctx) : Program(ctx) {
    *          - glReadBuffer
    */
   
-  //GLuint depthMapFBO;
   glGenFramebuffers(1, &depthMapFBO);
 
-  //Generate Depth Map Texture
   glGenTextures(1, &(ctx->shadowMapTexture));
   glBindTexture(GL_TEXTURE_2D, ctx->shadowMapTexture);
   glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT, SHADOW_MAP_SIZE, SHADOW_MAP_SIZE, 0, GL_DEPTH_COMPONENT, GL_FLOAT, NULL);
-
   
   glTexParameterfv(GL_TEXTURE_2D, GL_TEXTURE_BORDER_COLOR, borderColor);
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_BORDER);
@@ -50,25 +47,11 @@ ShadowProgram::ShadowProgram(Context* ctx) : Program(ctx) {
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
-  // glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_COMPARE_FUNC, GL_EQUAL);
-  // glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_COMPARE_MODE, GL_COMPARE_REF_TO_TEXTURE);
-
-
-  // glBindTexture(GL_TEXTURE_2D, 0);
-
-  // glGenFramebuffers(1, &ctx->shadowMapTexture);
-  // glBindFramebuffer(GL_FRAMEBUFFER, ctx->shadowMapTexture);
-
   glBindFramebuffer(GL_FRAMEBUFFER, depthMapFBO);
   glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, ctx->shadowMapTexture, 0);
 
-
   glDrawBuffer(GL_NONE);
   glReadBuffer(GL_NONE);
-
-
-  // glActiveTexture(GL_TEXTURE0);
-  // glBindTexture(GL_TEXTURE_2D, ctx->shadowMapTexture);
 
   glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
@@ -90,8 +73,6 @@ void ShadowProgram::doMainLoop() {
    *           2. For the direction light we need orthogonal projection rather than perspective projection
    *              (the near plane, far plane value is provided, the image size is [-10~10], [-10~10]
    */
-
-  
 
   glViewport(0, 0, SHADOW_MAP_SIZE, SHADOW_MAP_SIZE);
   glBindFramebuffer(GL_FRAMEBUFFER, depthMapFBO);
