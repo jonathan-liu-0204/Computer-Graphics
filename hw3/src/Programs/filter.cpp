@@ -82,13 +82,13 @@ void FilterProgram::updateFrameBuffer(int SCR_WIDTH, int SCR_HEIGHT) {
 
    glBindTexture(GL_TEXTURE_2D, 0);
 
-   GLuint rbo;
-   glGenRenderbuffers(1, &rbo);
-   glBindRenderbuffer(GL_RENDERBUFFER, rbo);
+   GLuint rboDepth;
+   glGenRenderbuffers(1, &rboDepth);
+   glBindRenderbuffer(GL_RENDERBUFFER, rboDepth);
    glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, SCR_WIDTH, SCR_HEIGHT);
    glBindRenderbuffer(GL_RENDERBUFFER, 0);
 
-   glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER, rbo);
+   glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER, rboDepth);
 
    if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE) {
      std::cout << "ERROR::FRAMEBUFFER:: Framebuffer is not complete!" << std::endl;
